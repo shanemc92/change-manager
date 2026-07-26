@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABsUlEQVR4nO3YyUrDUBTG8buyzmOmvoRIL76D4FPZOluHTqkR+ibWtSUXkWzaphlK9T2OXFFwYettwyGnmAN/yPL7JbswRuRMOzDyTizyD7Ern9k8ndXydcuJPcsZgsx0hl3NGebZ3Ixvxp51H8PPzGZEH2G1fN1sxp4pB/+SQRlhVXzdtGPPbMq3PT7DJoiQ43U79gxbDlSoQQgx9XibEEKO1xqRpzcimK0wXYRejzp6PYIkabXwOTWAVovaWk2OSFA1emRUTlMczajeTjUElRjV266EoBL7twAu4JC78M4FAEZbd6FSMwMKAt6wxn8CbgOlknwBwGzzJlAqA3CkNq4DpegCygOlyALWywOl6AKuBkqRBaxdDpTKAPyPVi981Bg64NxHjWEDVs581FgGEJNbPu2jxrABSyd91FgGEJNbPO6jxtABpR5auWJ3hA7IFXsoLRx1R7lS7wAdwKgezwApH583ABfwpDp6bC60UwMUBHQSAwSk9/t77wV0LsBLML673wErNUBCRPrjEyDojJ8BQW/8FAi64xUQ9MdPQMzPePZ1u69gcBdcmXxOe8/3fQAMSpHrlBkT6wAAAABJRU5ErkJggg==">
+  <title>Change Request Template Manager</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    :root {
+      /* Light Theme */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-tertiary: #e9ecef;
+      --accent: #0081bc;
+      --accent-hover: #006a9e;
+      --accent-dim: rgba(0, 129, 188, 0.1);
+      --text-primary: #2c3e50;
+      --text-secondary: #5a6c7d;
+      --text-muted: #95a5a6;
+      --border: #dee2e6;
+      --border-focus: #0081bc;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --orange: #f7941d;
+      --mono: 'Courier New', monospace;
+      --sans: 'Open Sans', sans-serif;
+      --heading: 'Montserrat', sans-serif;
+    }
+    
+    [data-theme="dark"] {
+      /* Dark Theme */
+      --bg-primary: #0a0e14;
+      --bg-secondary: #151b24;
+      --bg-tertiary: #1f2937;
+      --accent: #0081bc;
+      --accent-hover: #4d97b9;
+      --accent-dim: rgba(0, 129, 188, 0.1);
+      --text-primary: #e5e7eb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --border: #374151;
+      --border-focus: #0081bc;
+      --warning: #f39c12;
+      --danger: #ef4444;
+      --orange: #f7941d;
+    }
+
+    [data-theme="terminal"] {
+      /* Dark Terminal Theme */
+      --bg-primary: #090b10;
+      --bg-secondary: #12151c;
+      --bg-tertiary: #181c26;
+      --accent: #2f8a7c;
+      --accent-hover: #8ff2e1;
+      --accent-dim: rgba(94, 234, 212, 0.1);
+      --text-primary: #d9dde6;
+      --text-secondary: #9aa1b0;
+      --text-muted: #6b7385;
+      --border: #262b38;
+      --border-focus: #5eead4;
+      --warning: #f39c12;
+      --danger: #ff5f57;
+      --orange: #ffbd2e;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'JetBrains Mono', monospace;
+      --heading: 'JetBrains Mono', monospace;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .app {
+      display: flex;
+      min-height: 100vh;
+      animation: fadeIn 0.6s ease-out;
+    }
+    
+    .theme-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--accent);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 129, 188, 0.4);
+    }
+    
+    .sidebar {
+      width: 400px;
+      background: var(--bg-secondary);
+      border-right: 2px solid var(--border);
+      padding: 2rem;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
+    }
+    
+    .logo-container {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 3px solid var(--orange);
+      text-align: center;
+    }
+    
+    .logo-container img {
+      max-width: 180px;
+      height: auto;
+    }
+    
+    [data-theme="dark"] .logo-container img,
+    [data-theme="terminal"] .logo-container img {
+      filter: brightness(0) invert(1);
+    }
+    
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+    }
+    
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    
+    .view-toggle button {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: transparent;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    
+    .view-toggle button.active {
+      background: var(--accent);
+      color: var(--bg-primary);
+      border-color: var(--accent);
+    }
+    
+    .view-toggle button:not(.active):hover {
+      background: var(--bg-tertiary);
+    }
+    
+    .templates-main-view {
+      animation: slideUp 0.4s ease-out;
+    }
+    
+    .filter-input {
+      width: 100%;
+      margin-bottom: 1.5rem;
+      padding: 0.875rem 1rem;
+      font-size: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--sans);
+    }
+    
+    .filter-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    
+    .templates-main-list {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
+    }
+    
+    .templates-main-list .template-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .templates-main-list .template-item:hover {
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.05);
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+    }
+    
+    .templates-main-list .template-name {
+      font-size: 1rem;
+      flex: 1;
+      margin: 0;
+    }
+    
+    .templates-main-list .template-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    
+    .templates-main-list .template-actions button {
+      padding: 0.5rem 1rem;
+      font-size: 0.813rem;
+      min-width: auto;
+    }
+    
+    .templates-main-list .template-actions .danger {
+      grid-column: auto;
+    }
+    
+    .empty-templates {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+    
+    .empty-templates h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border);
+      animation: slideDown 0.8s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h1 {
+      font-family: var(--heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+      text-align: center;
+    }
+    
+    .subtitle {
+      font-family: var(--sans);
+      font-size: 0.813rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      text-align: center;
+    }
+    
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      animation: slideUp 0.8s ease-out 0.2s backwards;
+    }
+    
+    .controls button {
+      width: 100%;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    button {
+      font-family: var(--heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    
+    button:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 129, 188, 0.15);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    button:disabled:hover {
+      transform: none;
+      box-shadow: none;
+      background: var(--bg-primary);
+      border-color: var(--border);
+    }
+    
+    button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    
+    button.primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      box-shadow: 0 2px 12px rgba(0, 129, 188, 0.3);
+    }
+    
+    button.danger {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
+    }
+    
+    button.danger:hover {
+      background: #c0392b;
+      border-color: #c0392b;
+      box-shadow: 0 2px 12px rgba(231, 76, 60, 0.3);
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      font-family: var(--sans);
+      width: 100%;
+      padding: 0.875rem;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.938rem;
+      transition: all 0.2s ease;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+      background: var(--bg-tertiary);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .form-field {
+      animation: slideUp 0.8s ease-out backwards;
+    }
+    
+    .form-field.full-width {
+      grid-column: 1 / -1;
+    }
+    
+    label {
+      display: block;
+      font-family: var(--heading);
+      font-size: 0.813rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .field-with-copy {
+      position: relative;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      min-width: auto;
+    }
+    
+    .copy-btn:hover {
+      background: var(--accent);
+      color: var(--bg-primary);
+    }
+    
+    .placeholders-section {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      animation: slideUp 0.8s ease-out 0.5s backwards;
+      margin-top: auto;
+    }
+    
+    .templates-header {
+      font-family: var(--mono);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    
+    .template-name {
+      font-family: var(--mono);
+      color: var(--text-primary);
+    }
+    
+    .placeholder-item {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      align-items: center;
+    }
+    
+    .placeholder-item input {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.875rem;
+      font-family: var(--mono);
+    }
+    
+    .placeholder-item .placeholder-label {
+      min-width: 120px;
+      font-family: var(--mono);
+      font-size: 0.813rem;
+      color: var(--text-secondary);
+    }
+    
+    .replace-all-btn {
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      animation: slideUp 0.3s ease-out;
+    }
+    
+    .import-url-input {
+      width: 100%;
+      margin-bottom: 1rem;
+      font-family: var(--mono);
+      font-size: 0.875rem;
+    }
+    
+    .import-status {
+      font-family: var(--mono);
+      font-size: 0.813rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+    }
+    
+    .import-status.loading {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    
+    .import-status.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+    
+    .modal-header {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: flex-end;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+      animation: slideIn 0.3s ease-out;
+      font-family: var(--mono);
+      font-size: 0.875rem;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .notification.success {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .notification.error {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 0.875rem;
+    }
+    
+    .file-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .app {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 2px solid var(--border);
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="js/react.production.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/react@18/umd/react.production.min.js';"></script>
+  <script crossorigin src="js/react-dom.production.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';"></script>
+  <script src="js/babel.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/@babel/standalone/babel.min.js';"></script>
+  <script src="js/purify.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js';"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;// Security utilities
+    const SecurityUtils = {
+
+      // Validate URL is HTTPS only
+      validateURL: (url) => {
+        try {
+          const parsed = new URL(url);
+          if (parsed.protocol !== 'https:') {
+            throw new Error('Only HTTPS URLs are allowed for security');
+          }
+          return true;
+        } catch (e) {
+          throw new Error(`Invalid URL: ${e.message}`);
+        }
+      },
+
+      // JSON Schema validator for templates
+      validateTemplateSchema: (data) => {
+        // Check if it's an array or single template
+        const templates = Array.isArray(data) ? data : [data];
+        
+        for (const template of templates) {
+          // Must have name and data
+          if (!template.name || typeof template.name !== 'string') {
+            throw new Error('Template must have a valid "name" field');
+          }
+          
+          if (!template.data || typeof template.data !== 'object') {
+            throw new Error('Template must have a valid "data" field');
+          }
+
+          // Validate data structure matches expected fields
+          const validFields = ['typeOfChange', 'duration', 'downtime', 'reason', 
+                               'steps', 'testPlan', 'risks', 'securityRisks', 
+                               'backupPlan', 'expectedResults'];
+          
+          for (const key in template.data) {
+            if (!validFields.includes(key)) {
+              throw new Error(`Invalid field "${key}" in template data`);
+            }
+            
+            // All values must be strings
+            if (typeof template.data[key] !== 'string') {
+              throw new Error(`Field "${key}" must be a string`);
+            }
+          }
+
+        }
+        
+        return templates;
+      }
+    };
+
+    // Field configuration - single source of truth
+    const FIELDS = [
+      {
+        id: 'typeOfChange',
+        label: 'Type of Change',
+        type: 'select',
+        options: ['Normal', 'Standard', 'Emergency'],
+        fullWidth: false
+      },
+      {
+        id: 'duration',
+        label: 'Duration (in minutes)',
+        type: 'number',
+        placeholder: 'e.g., 60',
+        fullWidth: false
+      },
+      {
+        id: 'downtime',
+        label: 'Length of Downtime (in minutes)',
+        type: 'number',
+        placeholder: 'e.g., 30',
+        fullWidth: false
+      },
+      {
+        id: 'reason',
+        label: 'Reason for Change',
+        type: 'textarea',
+        placeholder: 'Why is the change required?\nIs there a Business, operational, or technical driver.\nWhat problem is being solved or improvement delivered?',
+        fullWidth: true
+      },
+      {
+        id: 'steps',
+        label: 'Steps Involved',
+        type: 'textarea',
+        placeholder: 'Clear, ordered implementation steps.\nInclude tools, systems, and teams involved.\nSufficient detail for another engineer to execute.',
+        fullWidth: true
+      },
+      {
+        id: 'testPlan',
+        label: 'Test Plan',
+        type: 'textarea',
+        placeholder: 'Pre-change checks to establish a baseline.\nPre-change testing performed.\nPost-change validation to confirm success.\nFunctional and service availability checks.',
+        fullWidth: true
+      },
+      {
+        id: 'risks',
+        label: 'Risks',
+        type: 'textarea',
+        placeholder: 'Potential impact to: users, business operations, infrastructure.\nWhat mitigations have been considered?\nLikelihood and severity in plain language.',
+        fullWidth: true
+      },
+      {
+        id: 'securityRisks',
+        label: 'Security Risks',
+        type: 'textarea',
+        placeholder: 'Security impact of change, any risk to confidentiality, integrity, or availability.\nAccess, privilege, exposure, or compliance considerations.\nExplicitly state if risk is low or none.',
+        fullWidth: true
+      },
+      {
+        id: 'backupPlan',
+        label: 'Backup/Contingency for Failure',
+        type: 'textarea',
+        placeholder: 'Rollback steps if change fails.\nIs there a confirmed backup/restore point available?\nWho is responsible and how quick is recovery?',
+        fullWidth: true
+      },
+      {
+        id: 'expectedResults',
+        label: 'Expected Consequences/Results',
+        type: 'textarea',
+        placeholder: 'What does success looks like after completion.\nMeasurable or observable outcomes.\nServices, performance, or risk posture post-change.',
+        fullWidth: true
+      }
+    ];
+
+    const STORAGE_KEY = 'changeRequestTemplates';
+    const DEFAULT_CENTRAL_URL = '';
+
+    function App() {
+      const [formData, setFormData] = useState(() => 
+        FIELDS.reduce((acc, field) => ({ ...acc, [field.id]: '' }), {})
+      );
+      const [templates, setTemplates] = useState([]);
+      const [currentTemplateName, setCurrentTemplateName] = useState('');
+      const [showSaveModal, setShowSaveModal] = useState(false);
+      const [showImportModal, setShowImportModal] = useState(false);
+      const [saveAsNew, setSaveAsNew] = useState(false);
+      const [notification, setNotification] = useState(null);
+      const [placeholders, setPlaceholders] = useState({});
+      const [currentView, setCurrentView] = useState('form'); // 'form' or 'templates'
+      const [filterText, setFilterText] = useState('');
+      const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'terminal');
+      const fileInputRef = useRef(null);
+
+      useEffect(() => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          try {
+            setTemplates(JSON.parse(stored));
+          } catch (e) {
+            console.error('Error loading templates:', e);
+          }
+        }
+      }, []);
+
+      useEffect(() => {
+        detectPlaceholders();
+      }, [formData]);
+
+      useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+      }, [theme]);
+
+      const toggleTheme = () => {
+        setTheme(prev => prev === 'light' ? 'dark' : prev === 'dark' ? 'terminal' : 'light');
+      };
+
+      const detectPlaceholders = () => {
+        const allText = Object.values(formData).join(' ');
+        const regex = /<([^>]+)>/g;
+        const found = {};
+        let match;
+        
+        while ((match = regex.exec(allText)) !== null) {
+          const placeholder = match[1];
+          if (!found[placeholder]) {
+            found[placeholder] = placeholders[placeholder] || '';
+          }
+        }
+        
+        setPlaceholders(found);
+      };
+
+      const saveToStorage = (newTemplates) => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newTemplates));
+        setTemplates(newTemplates);
+      };
+
+      const showNotification = (message, type = 'success') => {
+        setNotification({ message, type });
+        setTimeout(() => setNotification(null), 3000);
+      };
+
+      const handleInputChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+      };
+
+      const handleSaveTemplate = (name) => {
+        if (!name.trim()) {
+          showNotification('Template name cannot be empty', 'error');
+          return;
+        }
+
+        const existingIndex = templates.findIndex(t => t.name === name);
+        const newTemplates = [...templates];
+        const newTemplate = { name, data: formData };
+
+        if (existingIndex !== -1) {
+          newTemplates[existingIndex] = newTemplate;
+        } else {
+          newTemplates.push(newTemplate);
+        }
+
+        saveToStorage(newTemplates);
+        setCurrentTemplateName(name);
+        setShowSaveModal(false);
+        showNotification(`Template "${name}" saved successfully`);
+      };
+
+      const handleLoadTemplate = (template) => {
+        setFormData(template.data);
+        setCurrentTemplateName(template.name);
+        setCurrentView('form');
+        showNotification(`Template "${template.name}" loaded`);
+      };
+
+      const handleDeleteTemplate = (templateName) => {
+        if (confirm(`Delete template "${templateName}"?`)) {
+          const newTemplates = templates.filter(t => t.name !== templateName);
+          saveToStorage(newTemplates);
+          if (currentTemplateName === templateName) {
+            setCurrentTemplateName('');
+          }
+          showNotification(`Template "${templateName}" deleted`);
+        }
+      };
+
+      const handleNewTemplate = () => {
+        setFormData(FIELDS.reduce((acc, field) => ({ ...acc, [field.id]: '' }), {}));
+        setCurrentTemplateName('');
+        showNotification('New template created');
+      };
+
+      const handleCopy = (text, label) => {
+        navigator.clipboard.writeText(text).then(() => {
+          showNotification(`${label} copied to clipboard`);
+        });
+      };
+
+      const handleReplacePlaceholders = () => {
+        const newFormData = { ...formData };
+        
+        Object.keys(placeholders).forEach(placeholder => {
+          const replacement = placeholders[placeholder];
+          if (replacement) {
+            Object.keys(newFormData).forEach(field => {
+              newFormData[field] = newFormData[field].replace(
+                new RegExp(`<${placeholder}>`, 'g'),
+                replacement
+              );
+            });
+          }
+        });
+        
+        setFormData(newFormData);
+        showNotification('Placeholders replaced successfully');
+      };
+
+      const handlePlaceholderChange = (placeholder, value) => {
+        setPlaceholders(prev => ({ ...prev, [placeholder]: value }));
+      };
+
+      const handleCopyAll = () => {
+        const sections = FIELDS.map(field => {
+          const value = formData[field.id];
+          if (!value) return null;
+          return `**${field.label}**\n${value}`;
+        }).filter(Boolean);
+        
+        const fullText = sections.join('\n\n');
+        
+        navigator.clipboard.writeText(fullText).then(() => {
+          showNotification('All fields copied to clipboard');
+        }).catch(() => {
+          showNotification('Failed to copy to clipboard', 'error');
+        });
+      };
+
+      const downloadJSON = (data, filename) => {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const handleExportTemplate = (template) => {
+        downloadJSON(template, `${template.name}.json`);
+        showNotification(`Template "${template.name}" exported`);
+      };
+
+      const handleExportAll = () => {
+        downloadJSON(templates, 'change-request-templates.json');
+        showNotification('All templates exported');
+      };
+
+      const handleImportTemplates = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const imported = JSON.parse(e.target.result);
+            
+            // Validate and sanitize the imported templates
+            const validatedTemplates = SecurityUtils.validateTemplateSchema(imported);
+            
+            const newTemplates = [...templates];
+
+            validatedTemplates.forEach(template => {
+              const existingIndex = newTemplates.findIndex(t => t.name === template.name);
+              if (existingIndex !== -1) {
+                newTemplates[existingIndex] = template;
+              } else {
+                newTemplates.push(template);
+              }
+            });
+
+            saveToStorage(newTemplates);
+            showNotification(`${validatedTemplates.length} template(s) imported`);
+          } catch (error) {
+            showNotification(`Import failed: ${error.message}`, 'error');
+          }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+      };
+
+      const importFromURL = async (url) => {
+        try {
+          // Validate URL is HTTPS
+          SecurityUtils.validateURL(url);
+          
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const imported = await response.json();
+          
+          // Validate and sanitize the imported templates
+          const validatedTemplates = SecurityUtils.validateTemplateSchema(imported);
+          
+          const newTemplates = [...templates];
+
+          validatedTemplates.forEach(template => {
+            const existingIndex = newTemplates.findIndex(t => t.name === template.name);
+            if (existingIndex !== -1) {
+              newTemplates[existingIndex] = template;
+            } else {
+              newTemplates.push(template);
+            }
+          });
+
+          saveToStorage(newTemplates);
+          showNotification(`${validatedTemplates.length} template(s) imported from URL`);
+          setShowImportModal(false);
+          return true;
+        } catch (error) {
+          throw error;
+        }
+      };
+
+      const filteredTemplates = templates.filter(template =>
+        template.name.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      return (
+        <div className="app">
+          <div className="sidebar">            
+            <header>
+              <h1>CR Template Manager</h1>
+              <div className="subtitle">Version v1.2</div>
+            </header>
+
+            <div className="sidebar-content">
+              <div className="controls">
+                <button 
+                  className="primary" 
+                  onClick={() => setCurrentView(currentView === 'form' ? 'templates' : 'form')}
+                >
+                  {currentView === 'form' ? 'View Templates' : 'Back to Form'}
+                </button>
+                <button className="primary" onClick={handleCopyAll}>
+                  Copy All Fields
+                </button>
+                <button className="primary" onClick={() => { setSaveAsNew(false); setShowSaveModal(true); }}>
+                  {currentTemplateName ? 'Save Template' : 'Save As Template'}
+                </button>
+                <button onClick={() => { setSaveAsNew(true); setShowSaveModal(true); }}>
+                  Save As New
+                </button>
+                <button onClick={handleNewTemplate}>New Template</button>
+                <button onClick={handleExportAll} disabled={templates.length === 0}>Export All</button>
+                <button onClick={() => fileInputRef.current.click()}>Import File</button>
+                <button onClick={() => setShowImportModal(true)}>Import from URL</button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json"
+                  onChange={handleImportTemplates}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            {Object.keys(placeholders).length > 0 && currentView === 'form' && (
+              <div className="placeholders-section">
+                <div className="templates-header">Placeholders ({Object.keys(placeholders).length})</div>
+                {Object.keys(placeholders).map(placeholder => (
+                  <div key={placeholder} className="placeholder-item">
+                    <div className="placeholder-label">&lt;{placeholder}&gt;</div>
+                    <input
+                      type="text"
+                      value={placeholders[placeholder]}
+                      onChange={(e) => handlePlaceholderChange(placeholder, e.target.value)}
+                      placeholder="Enter replacement value..."
+                    />
+                  </div>
+                ))}
+                <button className="primary replace-all-btn" onClick={handleReplacePlaceholders}>
+                  Replace All
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="main-content">
+            {currentView === 'form' ? (
+              <form onSubmit={(e) => e.preventDefault()}>
+                <div className="form-grid">
+                  {FIELDS.map((field, index) => (
+                    <FormField
+                      key={field.id}
+                      field={field}
+                      value={formData[field.id]}
+                      onChange={(value) => handleInputChange(field.id, value)}
+                      onCopy={(text) => handleCopy(text, field.label)}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              </form>
+            ) : (
+              <div className="templates-main-view">
+                <h2 style={{ 
+                  fontSize: '2rem', 
+                  marginBottom: '1.5rem', 
+                  color: 'var(--text-primary)',
+                  fontWeight: 600
+                }}>
+                  Saved Templates ({templates.length})
+                </h2>
+                {templates.length > 0 && (
+                  <input
+                    type="text"
+                    className="filter-input"
+                    placeholder="Filter templates..."
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                  />
+                )}
+                {templates.length > 0 ? (
+                  <div className="templates-main-list">
+                    {filteredTemplates.length > 0 ? (
+                      filteredTemplates.map((template, index) => (
+                        <div key={index} className="template-item">
+                          <span className="template-name">{template.name}</span>
+                          <div className="template-actions">
+                            <button onClick={() => handleLoadTemplate(template)}>Load</button>
+                            <button onClick={() => handleExportTemplate(template)}>Export</button>
+                            <button className="danger" onClick={() => handleDeleteTemplate(template.name)}>Delete</button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="empty-templates">
+                        <p>No templates match your filter</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="empty-templates">
+                    <h3>No Templates Yet</h3>
+                    <p>Create a template by filling in the form and clicking "Save As Template"</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {showSaveModal && (
+            <SaveModal
+              currentName={saveAsNew ? '' : currentTemplateName}
+              onSave={handleSaveTemplate}
+              onClose={() => setShowSaveModal(false)}
+            />
+          )}
+
+          {showImportModal && (
+            <ImportURLModal
+              defaultURL={DEFAULT_CENTRAL_URL}
+              onImport={importFromURL}
+              onClose={() => setShowImportModal(false)}
+            />
+          )}
+
+          {notification && (
+            <div className={`notification ${notification.type}`}>
+              {notification.message}
+            </div>
+          )}
+
+          <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
+            {theme === 'light' ? '☀️' : theme === 'dark' ? '🌙' : '💻'}
+          </button>
+        </div>
+      );
+    }
+
+    function FormField({ field, value, onChange, onCopy, index }) {
+      const renderInput = () => {
+        const commonProps = {
+          value,
+          onChange: (e) => onChange(e.target.value)
+        };
+
+        switch (field.type) {
+          case 'select':
+            return (
+              <select {...commonProps}>
+                <option value="">Select{field.options ? '...' : ''}</option>
+                {field.options?.map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            );
+          case 'textarea':
+            return (
+              <textarea
+                {...commonProps}
+                placeholder={field.placeholder}
+              />
+            );
+          case 'number':
+            return (
+              <input
+                type="number"
+                {...commonProps}
+                placeholder={field.placeholder}
+              />
+            );
+          default:
+            return (
+              <input
+                type="text"
+                {...commonProps}
+                placeholder={field.placeholder}
+              />
+            );
+        }
+      };
+
+      return (
+        <div 
+          className={`form-field ${field.fullWidth ? 'full-width' : ''}`}
+          style={{ animationDelay: `${0.1 + index * 0.05}s` }}
+        >
+          <label>{field.label}</label>
+          <div className="field-with-copy">
+            {renderInput()}
+            {value && (
+              <button
+                type="button"
+                className="copy-btn"
+                onClick={() => onCopy(value)}
+              >
+                Copy
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function SaveModal({ currentName, onSave, onClose }) {
+      const [name, setName] = useState(currentName);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave(name);
+      };
+
+      return (
+        <div className="modal" onClick={onClose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2 className="modal-header">Save Template</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-field">
+                <label>Template Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter template name..."
+                  autoFocus
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={onClose}>Cancel</button>
+                <button type="submit" className="primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function ImportURLModal({ defaultURL, onImport, onClose }) {
+      const [url, setUrl] = useState(defaultURL);
+      const [status, setStatus] = useState(null);
+      const [loading, setLoading] = useState(false);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setStatus({ type: 'loading', message: 'Validating and importing templates...' });
+
+        try {
+          await onImport(url);
+          setStatus(null);
+        } catch (error) {
+          setStatus({ 
+            type: 'error', 
+            message: `Failed to import: ${error.message}` 
+          });
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="modal" onClick={onClose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2 className="modal-header">Import from URL</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="form-field">
+                <label>Template URL (HTTPS only)</label>
+                <input
+                  type="text"
+                  className="import-url-input"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://example.com/templates.json"
+                  autoFocus
+                  disabled={loading}
+                />
+                <p style={{ 
+                  fontSize: '0.75rem', 
+                  color: 'var(--text-muted)', 
+                  marginTop: '0.5rem',
+                  fontFamily: 'var(--mono)'
+                }}>
+                  🔒 Only HTTPS URLs accepted. All imports are validated and will overwrite templates with the same name.
+                </p>
+              </div>
+              {status && (
+                <div className={`import-status ${status.type}`}>
+                  {status.message}
+                </div>
+              )}
+              <div className="modal-actions">
+                <button type="button" onClick={onClose} disabled={loading}>
+                  Cancel
+                </button>
+                <button type="submit" className="primary" disabled={loading}>
+                  {loading ? 'Importing...' : 'Import'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

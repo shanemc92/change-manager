@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Standard-Application Install",
+    "data": {
+      "typeOfChange": "Standard",
+      "duration": "60",
+      "downtime": "90",
+      "reason": "- Install approved application <Application Name> on endpoint <Device Name>\n- Application is part of the standard service catalogue\n- Required to support normal business activities",
+      "steps": "- Verify approved service request for <Application Name>\n- Confirm <Device Name> meets application prerequisites\n- Deploy <Application Name> version <Version No> using standard deployment method <Intune/Manual/Other>\n- Apply default configuration as per service catalogue\n- Confirm installation completed successfully",
+      "testPlan": "- Verify <Application Name> is installed on <Device Name>\n- Launch application to confirm it opens successfully\n- Confirm no errors are logged post-install",
+      "risks": "- Installation may fail due to device configuration issues\n- Minor user disruption during install window\n- No expected impact to other users or services",
+      "securityRisks": "- Low risk\n- Application is approved and vetted via service catalogue\n- No additional privileges or access changes introduced",
+      "backupPlan": "- Uninstall <Application Name> if installation fails or causes issues\n- Restore device to pre-install state if required\n- Reattempt installation after resolving any identified issues",
+      "expectedResults": "- <Application Name> is successfully installed on <Device Name>\n- Application functions as expected\n- No negative impact to endpoint stability or security"
+    }
+  },
+  {
+    "name": "Standard-Remove User",
+    "data": {
+      "typeOfChange": "Standard",
+      "duration": "60",
+      "downtime": "90",
+      "reason": "- Remove user access for <Forename> <Surname> from <Organisation>\n- User no longer requires access from <Access Removal Date>\n- Reason for access removal: <Reason>\n- This is a repeatable, low-risk, pre-approved offboarding activity",
+      "steps": "- Verify approved request for access removal and effective date <Access Removal Date>\n- Disable or remove primary identity account in the IdP\n- Remove access from the following systems and services:\n  - <Systems/Apps>\n- Remove user from security and distribution groups\n- Disable or archive mailbox and user data as per policy\n- Record completion for audit purposes\n- Notify requester once access removal is complete",
+      "testPlan": "- Confirm IdP account is disabled or removed\n- Verify user no longer has access to listed systems\n- Confirm group memberships are removed\n- Validate mailbox and login access are no longer available",
+      "risks": "- Delayed removal could result in unauthorised access\n- Incorrect removal may impact business continuity if timing is wrong\n- No expected impact to other users or services",
+      "securityRisks": "- Low risk when completed on the correct date\n- Reduces risk of unauthorised access by removing credentials\n- No new access or privileges introduced",
+      "backupPlan": "- Re-enable account temporarily if removal is performed in error\n- Restore group memberships or access if required\n- Escalate immediately if access is removed prematurely",
+      "expectedResults": "- <Forename> <Surname> no longer has access from <Access Removal Date>\n- All specified systems and services are removed as requested\n- User access complies with organisational offboarding and security policies"
+    }
+  },
+  {
+    "name": "Normal-Create Privileged User",
+    "data": {
+      "typeOfChange": "Normal",
+      "duration": "",
+      "downtime": "",
+      "reason": "- Provision a privileged user account for <Forename> <Surname>\n- Account is required to perform authorised administrative duties in the <Privileged Role> role for <Organisation>\n- This follows an approved, repeatable privileged access provisioning process",
+      "steps": "- Verify approved request and business justification for privileged access\n- Create separate privileged account (not the user’s standard account)\n- Assign the <Privileged Role> role\n- Apply least-privilege permissions aligned to the role\n- Enforce security controls (e.g. MFA, password policy, conditional access)\n- Record account and role assignment for audit purposes\n- Notify requester once provisioning is complete",
+      "testPlan": "- Confirm privileged account exists and is enabled\n- Verify <Privileged Role> permissions are correctly applied\n- Confirm access works for intended administrative tasks only\n- Validate security controls (e.g. MFA enforcement)",
+      "risks": "- Misconfiguration could result in excessive privileges\n- Potential security exposure if account is not adequately protected\n- No expected impact to end users or live services",
+      "securityRisks": "- Elevated risk due to privileged access\n- Risk mitigated by separate account, role-based assignment, and enforced security controls\n- No access beyond the approved <Privileged Role> - Role has been reviewed and principle of least privilege is applied. ",
+      "backupPlan": "- Immediately disable or remove the privileged account if issues are identified\n- Remove <Privileged Role> assignment if incorrect\n- Recreate account following corrected approval if required",
+      "expectedResults": "- Privileged account for <Forename> <Surname> is active\n- <Privileged Role> access is correctly assigned and restricted\n- Account complies with organisational privileged access security standards"
+    }
+  },
+  {
+    "name": "Standard-Create Basic User",
+    "data": {
+      "typeOfChange": "Standard",
+      "duration": "",
+      "downtime": "",
+      "reason": "- Provision a new user account for <Forename> <Surname>\n- User requires access to corporate systems to perform the <Role> role at <Organisation>\n- This is a repeatable, low-risk, pre-approved onboarding activity",
+      "steps": "- Verify approved user request for <Forename> <Surname>\n- Create user account in directory service as per <Organisation> procedure.\n- Assign standard role-based access for <Role>\n- Add user to required security and distribution groups\n- Configure mailbox and basic account settings\n- Notify requester and any other stakeholders once account creation is complete",
+      "testPlan": "- Confirm user account exists and is enabled\n- Verify correct group and role assignments as per request form received\n- Confirm mailbox, application and login access function as expected",
+      "risks": "- User may receive incorrect access if role details are wrong\n- Minor administrative rework if changes are required post-creation\n- No expected impact to existing users or services",
+      "securityRisks": "- Low risk\n- Access granted is limited to standard role-based permissions\n- No elevated or privileged access assigned",
+      "backupPlan": "- Disable or remove the user account if created incorrectly\n- Roll back group memberships to default state\n- Recreate account if provisioning fails",
+      "expectedResults": "- <Forename> <Surname> has an active user account\n- Correct access is in place for the <Role> role\n- User is able to access required systems for <Organisation>"
+    }
+  },
+  {
+    "name": "Normal-Create Firewall Policy",
+    "data": {
+      "typeOfChange": "Normal",
+      "duration": "",
+      "downtime": "",
+      "reason": "- Add a standard firewall policy to allow <Application Name> network access\n- Required to support normal business operation of the application\n- Change follows an approved, repeatable firewall rule process",
+      "steps": "- Verify approved request and policy details for <Application Name>\n- Create new firewall policy with the following parameters:\n  - Policy Name: <Policy Name>\n  - Source Interface: <Source Interface>\n  - Destination Interface: <Destination Interface>\n  - Source IPs: <Source IPs>\n  - Destination IPs: <Destination IPs>\n  - Services / Ports: <Services>\n- Apply standard logging and security profiles\n- Position rule according to firewall policy standards\n- Commit and deploy configuration",
+      "testPlan": "- Confirm firewall policy is present and enabled\n- Verify <Application Name> can reach intended destination\n- Confirm no unintended traffic is permitted\n- Review firewall logs for expected traffic",
+      "risks": "- Incorrect rule configuration could block required traffic\n- Overly permissive settings could allow unintended access\n- No expected impact to other services when correctly scoped",
+      "securityRisks": "- Low risk if rule follows least-privilege principles\n- Risk increases if IP ranges or services are too broad\n- No inbound access permitted unless explicitly defined",
+      "backupPlan": "- Disable or remove the firewall policy if issues occur\n- Roll back firewall configuration to last known good state\n- Reapply corrected rule following review",
+      "expectedResults": "- Firewall policy <Policy Name> is active\n- <Application Name> can access required network destinations\n- No unintended access or disruption to existing traffic"
+    }
+  },
+  {
+    "name": "Standard-Expand VM Disk",
+    "data": {
+      "typeOfChange": "Standard",
+      "duration": "",
+      "downtime": "",
+      "reason": "- Increase disk capacity for virtual machine <VM Name>\n- Existing disk <Disk Identifier> requires additional space to support normal operations\n- This is a repeatable, low-risk VMware disk expansion activity",
+      "steps": "- Confirm approved request and required additional disk size <Additional Disk Size>\n- Log in to vCenter\n- Locate virtual machine <VM Name>\n- Edit VM settings and expand disk <Disk Identifier> by <Additional Disk Size>\n- Confirm disk change is applied successfully in vCenter\n- Log in to <VM Name> (Windows)\n- Open Disk Management\n- Rescan disks\n- Extend the relevant volume to use the newly allocated space\n- Confirm disk expansion completes successfully",
+      "testPlan": "- Pre-change:\n  - Confirm current disk usage on <VM Name>\n  - Verify available free space on datastore <Datastore Name>: <Available Datastore Space>\n- Post-vCenter change:\n  - Confirm disk size is increased at VM level\n- Post-OS change:\n  - Verify volume is expanded in Windows Disk Management\n  - Confirm available free space is visible within the OS\n  - Validate application or service functionality if applicable",
+      "risks": "- Disk expansion may fail if datastore space is insufficient\n- Incorrect disk selection could impact the wrong volume\n- Minimal risk to services when correct disk is identified",
+      "securityRisks": "- Low risk\n- No access, permissions, or exposure changes introduced\n- Change limited to storage capacity only\n",
+      "backupPlan": "- Do not proceed if datastore space is insufficient\n- Revert disk size change if vCenter expansion fails\n- Restore from backup or snapshot if disk corruption occurs\n- Escalate to virtualization team if rollback is required",
+      "expectedResults": "- Disk <Disk Identifier> on <VM Name> is successfully expanded\n- Additional space <Additional Disk Size> is available within Windows\n- No impact to system stability or security"
+    }
+  }
+]
