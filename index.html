@@ -1,1366 +1,2329 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-design="chamfer" data-mode="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABsUlEQVR4nO3YyUrDUBTG8buyzmOmvoRIL76D4FPZOluHTqkR+ibWtSUXkWzaphlK9T2OXFFwYettwyGnmAN/yPL7JbswRuRMOzDyTizyD7Ern9k8ndXydcuJPcsZgsx0hl3NGebZ3Ixvxp51H8PPzGZEH2G1fN1sxp4pB/+SQRlhVXzdtGPPbMq3PT7DJoiQ43U79gxbDlSoQQgx9XibEEKO1xqRpzcimK0wXYRejzp6PYIkabXwOTWAVovaWk2OSFA1emRUTlMczajeTjUElRjV266EoBL7twAu4JC78M4FAEZbd6FSMwMKAt6wxn8CbgOlknwBwGzzJlAqA3CkNq4DpegCygOlyALWywOl6AKuBkqRBaxdDpTKAPyPVi981Bg64NxHjWEDVs581FgGEJNbPu2jxrABSyd91FgGEJNbPO6jxtABpR5auWJ3hA7IFXsoLRx1R7lS7wAdwKgezwApH583ABfwpDp6bC60UwMUBHQSAwSk9/t77wV0LsBLML673wErNUBCRPrjEyDojJ8BQW/8FAi64xUQ9MdPQMzPePZ1u69gcBdcmXxOe8/3fQAMSpHrlBkT6wAAAABJRU5ErkJggg==">
-  <title>Change Request Template Manager</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
-    
-    :root {
-      /* Light Theme */
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8f9fa;
-      --bg-tertiary: #e9ecef;
-      --accent: #0081bc;
-      --accent-hover: #006a9e;
-      --accent-dim: rgba(0, 129, 188, 0.1);
-      --text-primary: #2c3e50;
-      --text-secondary: #5a6c7d;
-      --text-muted: #95a5a6;
-      --border: #dee2e6;
-      --border-focus: #0081bc;
-      --warning: #f39c12;
-      --danger: #e74c3c;
-      --orange: #f7941d;
-      --mono: 'Courier New', monospace;
-      --sans: 'Open Sans', sans-serif;
-      --heading: 'Montserrat', sans-serif;
-    }
-    
-    [data-theme="dark"] {
-      /* Dark Theme */
-      --bg-primary: #0a0e14;
-      --bg-secondary: #151b24;
-      --bg-tertiary: #1f2937;
-      --accent: #0081bc;
-      --accent-hover: #4d97b9;
-      --accent-dim: rgba(0, 129, 188, 0.1);
-      --text-primary: #e5e7eb;
-      --text-secondary: #9ca3af;
-      --text-muted: #6b7280;
-      --border: #374151;
-      --border-focus: #0081bc;
-      --warning: #f39c12;
-      --danger: #ef4444;
-      --orange: #f7941d;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src https:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<title>change-manager</title>
 
-    [data-theme="terminal"] {
-      /* Dark Terminal Theme */
-      --bg-primary: #090b10;
-      --bg-secondary: #12151c;
-      --bg-tertiary: #181c26;
-      --accent: #2f8a7c;
-      --accent-hover: #8ff2e1;
-      --accent-dim: rgba(94, 234, 212, 0.1);
-      --text-primary: #d9dde6;
-      --text-secondary: #9aa1b0;
-      --text-muted: #6b7385;
-      --border: #262b38;
-      --border-focus: #5eead4;
-      --warning: #f39c12;
-      --danger: #ff5f57;
-      --orange: #ffbd2e;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'JetBrains Mono', monospace;
-      --heading: 'JetBrains Mono', monospace;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: var(--sans);
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
+<style>
 
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    
-    .app {
-      display: flex;
-      min-height: 100vh;
-      animation: fadeIn 0.6s ease-out;
-    }
-    
-    .theme-toggle {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--accent);
-      color: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-    
-    .theme-toggle:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 16px rgba(0, 129, 188, 0.4);
-    }
-    
-    .sidebar {
-      width: 400px;
-      background: var(--bg-secondary);
-      border-right: 2px solid var(--border);
-      padding: 2rem;
-      overflow-y: auto;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: background-color 0.3s ease;
-    }
-    
-    .logo-container {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 3px solid var(--orange);
-      text-align: center;
-    }
-    
-    .logo-container img {
-      max-width: 180px;
-      height: auto;
-    }
-    
-    [data-theme="dark"] .logo-container img,
-    [data-theme="terminal"] .logo-container img {
-      filter: brightness(0) invert(1);
-    }
-    
-    .sidebar-content {
-      flex: 1;
-      overflow-y: auto;
-    }
-    
-    .main-content {
-      flex: 1;
-      padding: 2rem;
-      max-width: 1200px;
-    }
-    
-    .view-toggle {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      background: var(--bg-secondary);
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-    
-    .view-toggle button {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      background: transparent;
-      border: none;
-      transition: all 0.2s ease;
-    }
-    
-    .view-toggle button.active {
-      background: var(--accent);
-      color: var(--bg-primary);
-      border-color: var(--accent);
-    }
-    
-    .view-toggle button:not(.active):hover {
-      background: var(--bg-tertiary);
-    }
-    
-    .templates-main-view {
-      animation: slideUp 0.4s ease-out;
-    }
-    
-    .filter-input {
-      width: 100%;
-      margin-bottom: 1.5rem;
-      padding: 0.875rem 1rem;
-      font-size: 1rem;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-family: var(--sans);
-    }
-    
-    .filter-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
-    }
-    
-    .templates-main-list {
-      display: grid;
-      gap: 0.75rem;
-      grid-template-columns: 1fr;
-    }
-    
-    .templates-main-list .template-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1rem 1.5rem;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      transition: all 0.2s ease;
-    }
-    
-    .templates-main-list .template-item:hover {
-      border-color: var(--accent);
-      background: rgba(16, 185, 129, 0.05);
-      transform: translateX(4px);
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
-    }
-    
-    .templates-main-list .template-name {
-      font-size: 1rem;
-      flex: 1;
-      margin: 0;
-    }
-    
-    .templates-main-list .template-actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-shrink: 0;
-    }
-    
-    .templates-main-list .template-actions button {
-      padding: 0.5rem 1rem;
-      font-size: 0.813rem;
-      min-width: auto;
-    }
-    
-    .templates-main-list .template-actions .danger {
-      grid-column: auto;
-    }
-    
-    .empty-templates {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--text-muted);
-    }
-    
-    .empty-templates h3 {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-secondary);
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    header {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--border);
-      animation: slideDown 0.8s ease-out;
-    }
-    
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    h1 {
-      font-family: var(--heading);
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 0.5rem;
-      color: var(--accent);
-      text-align: center;
-    }
-    
-    .subtitle {
-      font-family: var(--sans);
-      font-size: 0.813rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 500;
-      text-align: center;
-    }
-    
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-      animation: slideUp 0.8s ease-out 0.2s backwards;
-    }
-    
-    .controls button {
-      width: 100%;
-    }
-    
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    button {
-      font-family: var(--heading);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.75rem 1.5rem;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      border: 2px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-    
-    button:hover {
-      background: var(--bg-tertiary);
-      border-color: var(--accent);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 129, 188, 0.15);
-    }
-    
-    button:active {
-      transform: translateY(0);
-    }
-    
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    button:disabled:hover {
-      transform: none;
-      box-shadow: none;
-      background: var(--bg-primary);
-      border-color: var(--border);
-    }
-    
-    button.primary {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
-    
-    button.primary:hover {
-      background: var(--accent-hover);
-      border-color: var(--accent-hover);
-      box-shadow: 0 2px 12px rgba(0, 129, 188, 0.3);
-    }
-    
-    button.danger {
-      background: var(--danger);
-      color: white;
-      border-color: var(--danger);
-    }
-    
-    button.danger:hover {
-      background: #c0392b;
-      border-color: #c0392b;
-      box-shadow: 0 2px 12px rgba(231, 76, 60, 0.3);
-    }
-    
-    input[type="text"],
-    input[type="number"],
-    select,
-    textarea {
-      font-family: var(--sans);
-      width: 100%;
-      padding: 0.875rem;
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.938rem;
-      transition: all 0.2s ease;
-    }
-    
-    input[type="text"]:focus,
-    input[type="number"]:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px var(--accent-dim);
-      background: var(--bg-tertiary);
-    }
-    
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-      font-family: var(--sans);
-      line-height: 1.5;
-    }
-    
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .form-field {
-      animation: slideUp 0.8s ease-out backwards;
-    }
-    
-    .form-field.full-width {
-      grid-column: 1 / -1;
-    }
-    
-    label {
-      display: block;
-      font-family: var(--heading);
-      font-size: 0.813rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-    
-    .field-with-copy {
-      position: relative;
-    }
-    
-    .copy-btn {
-      position: absolute;
-      right: 0.5rem;
-      top: 0.5rem;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.75rem;
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      min-width: auto;
-    }
-    
-    .copy-btn:hover {
-      background: var(--accent);
-      color: var(--bg-primary);
-    }
-    
-    .placeholders-section {
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-      animation: slideUp 0.8s ease-out 0.5s backwards;
-      margin-top: auto;
-    }
-    
-    .templates-header {
-      font-family: var(--mono);
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-      font-weight: 500;
-    }
-    
-    .template-name {
-      font-family: var(--mono);
-      color: var(--text-primary);
-    }
-    
-    .placeholder-item {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-      align-items: center;
-    }
-    
-    .placeholder-item input {
-      flex: 1;
-      padding: 0.5rem;
-      font-size: 0.875rem;
-      font-family: var(--mono);
-    }
-    
-    .placeholder-item .placeholder-label {
-      min-width: 120px;
-      font-family: var(--mono);
-      font-size: 0.813rem;
-      color: var(--text-secondary);
-    }
-    
-    .replace-all-btn {
-      width: 100%;
-      margin-top: 1rem;
-    }
-    
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease-out;
-    }
-    
-    .modal-content {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-      animation: slideUp 0.3s ease-out;
-    }
-    
-    .import-url-input {
-      width: 100%;
-      margin-bottom: 1rem;
-      font-family: var(--mono);
-      font-size: 0.875rem;
-    }
-    
-    .import-status {
-      font-family: var(--mono);
-      font-size: 0.813rem;
-      padding: 0.75rem;
-      border-radius: 4px;
-      margin-top: 1rem;
-    }
-    
-    .import-status.loading {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--accent);
-      border: 1px solid var(--accent);
-    }
-    
-    .import-status.error {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-      border: 1px solid var(--danger);
-    }
-    
-    .modal-header {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: var(--accent);
-    }
-    
-    .modal-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      justify-content: flex-end;
-    }
-    
-    .notification {
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      background: var(--bg-secondary);
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      padding: 1rem 1.5rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      z-index: 2000;
-      animation: slideIn 0.3s ease-out;
-      font-family: var(--mono);
-      font-size: 0.875rem;
-    }
-    
-    @keyframes slideIn {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    
-    .notification.success {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    
-    .notification.error {
-      border-color: var(--danger);
-      color: var(--danger);
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text-muted);
-      font-family: var(--mono);
-      font-size: 0.875rem;
-    }
-    
-    .file-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    @media (max-width: 768px) {
-      .app {
-        flex-direction: column;
-      }
-      
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 2px solid var(--border);
-      }
-      
-      .main-content {
-        padding: 1rem;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-      
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+/* ============================================================
+   change-manager
+
+   One stylesheet, three independent axes:
+
+     data-design  chamfer | console | circuit | contour
+                  shape language, surface hue family, backdrop
+                  texture, ornament. This is the "look".
+
+     data-mode    dark | dusk | sepia | light
+                  the lightness ramp only. Every design supports
+                  every mode.
+
+     --ah / --ac  accent hue and chroma, set on <html> by the
+                  accent picker. Accent lightness comes from the
+                  mode, so a hue can never go invisible against
+                  the surface it sits on.
+
+   That is 16 palettes from eight small blocks, and no component
+   rule anywhere below knows which one is active.
+
+   Geometry is deliberately mode- and design-independent: every
+   design shares the same bar height, panel padding, control
+   padding, type sizes and grid. Designs may only change colour,
+   radius, clip-path, borders and absolutely-positioned ornament,
+   so switching design never reflows the page.
+
+   Sans for chrome and prose, mono for data. No webfonts, no
+   network calls, no build step.
+   ============================================================ */
+
+:root {
+    --wrap: 1080px;   /* content column */
+    --read: 760px;    /* prose column */
+    --ui:   system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    /* Shared geometry. Do not re-declare these in a design block:
+       they are what keeps a design switch from moving content. */
+    --bar:      52px;   /* top bar height */
+    --pad:      18px;   /* panel padding */
+    --gap:      14px;   /* grid gap */
+    --ctl:      30px;   /* icon button / logo tile box */
+
+    /* Accent defaults, overwritten inline by the picker. */
+    --ah: 178;
+    --ac: 68%;
+}
+
+/* ============================================================
+   Designs: hue family per mode group, shape, ornament switches
+   ============================================================ */
+
+/* Cut corners, instrument grid. The house design. */
+html[data-design="chamfer"] {
+    --hd: 218; --sd: 20%;    /* dark + dusk surfaces */
+    --hw: 36;  --sw: 30%;    /* sepia surfaces */
+    --hl: 216; --sl: 14%;    /* light surfaces */
+    --radius: 0px;
+    --radius-sm: 4px;
+    --notch: 16px;
+    --notch-sm: 8px;
+}
+
+/* Square, graphite, hairline scan lines. The terminal remnant. */
+html[data-design="console"] {
+    --hd: 205; --sd: 9%;
+    --hw: 42;  --sw: 20%;
+    --hl: 210; --sl: 7%;
+    --radius: 0px;
+    --radius-sm: 0px;
+    --notch: 0px;
+    --notch-sm: 0px;
+}
+
+/* Board colours, via grid, one constant plating. */
+html[data-design="circuit"] {
+    --hd: 152; --sd: 38%;
+    --hw: 40;  --sw: 34%;
+    --hl: 150; --sl: 8%;
+    --radius: 3px;
+    --radius-sm: 2px;
+    --notch: 0px;
+    --notch-sm: 0px;
+}
+
+/* Soft radii, accent wash, no texture. The calm one. */
+html[data-design="contour"] {
+    --hd: 258; --sd: 22%;
+    --hw: 30;  --sw: 26%;
+    --hl: 250; --sl: 13%;
+    --radius: 14px;
+    --radius-sm: 9px;
+    --notch: 0px;
+    --notch-sm: 0px;
+}
+
+/* ============================================================
+   Modes: lightness ramp, accent band, status colours
+
+   --l-*  surface and text lightness stops
+   --al   accent lightness, chosen so any hue clears its surface
+   --ink  text that sits on top of the accent
+   ============================================================ */
+
+html[data-mode="dark"] {
+    color-scheme: dark;
+    --h: var(--hd); --s: var(--sd);
+    --l-bg: 7%;   --l-card: 10.5%; --l-sunken: 8.5%; --l-raised: 15%;
+    --l-line: 23%; --l-soft: 16%;
+    --l-fg: 93%;  --l-dim: 67%;   --l-faint: 54%;
+    --al: 66%; --soft: 0.15;
+    --ink: hsl(var(--ah) 60% 8%);
+    --sh: rgba(0, 0, 0, 0.55);
+    --shadow-lift: 0 20px 50px -20px rgba(0, 0, 0, 0.85);
+    --ok:   hsl(146 58% 55%);
+    --warn: hsl(41 86% 60%);
+    --bad:  hsl(5 85% 66%);
+    --ok-ink: hsl(146 60% 8%);
+    --copper: #d3a24a;
+}
+
+/* "Not as dark": same palette lifted off black, for rooms with
+   some light in them and for long sessions. */
+html[data-mode="dusk"] {
+    color-scheme: dark;
+    --h: var(--hd); --s: var(--sd);
+    --l-bg: 16%;  --l-card: 20%;  --l-sunken: 17.5%; --l-raised: 25%;
+    --l-line: 32%; --l-soft: 25%;
+    --l-fg: 95%;  --l-dim: 74%;   --l-faint: 62%;
+    --al: 68%; --soft: 0.17;
+    --ink: hsl(var(--ah) 60% 10%);
+    --sh: rgba(0, 0, 0, 0.42);
+    --shadow-lift: 0 20px 50px -20px rgba(0, 0, 0, 0.7);
+    --ok:   hsl(146 55% 58%);
+    --warn: hsl(41 82% 62%);
+    --bad:  hsl(5 82% 68%);
+    --ok-ink: hsl(146 60% 9%);
+    --copper: #dcae5c;
+}
+
+/* Warm paper. Bright but low glare. */
+html[data-mode="sepia"] {
+    color-scheme: light;
+    --h: var(--hw); --s: var(--sw);
+    --l-bg: 87%;  --l-card: 95%;  --l-sunken: 91%; --l-raised: 98%;
+    --l-line: 72%; --l-soft: 82%;
+    --l-fg: 16%;  --l-dim: 36%;   --l-faint: 45%;
+    --al: 38%; --soft: 0.11;
+    --ink: hsl(var(--ah) 40% 98%);
+    --sh: rgba(70, 52, 18, 0.16);
+    --shadow-lift: 0 20px 50px -22px rgba(70, 52, 18, 0.3);
+    --ok:   hsl(150 52% 30%);
+    --warn: hsl(32 78% 34%);
+    --bad:  hsl(2 68% 44%);
+    --ok-ink: hsl(40 40% 97%);
+    --copper: #96681a;
+}
+
+/* Cool white. The print-adjacent one. */
+html[data-mode="light"] {
+    color-scheme: light;
+    --h: var(--hl); --s: var(--sl);
+    --l-bg: 93%;  --l-card: 100%; --l-sunken: 96.5%; --l-raised: 99%;
+    --l-line: 84%; --l-soft: 90%;
+    --l-fg: 12%;  --l-dim: 37%;   --l-faint: 47%;
+    --al: 39%; --soft: 0.1;
+    --ink: hsl(var(--ah) 35% 99%);
+    --sh: rgba(16, 24, 40, 0.14);
+    --shadow-lift: 0 20px 50px -22px rgba(16, 24, 40, 0.26);
+    --ok:   hsl(150 54% 29%);
+    --warn: hsl(32 80% 33%);
+    --bad:  hsl(2 70% 45%);
+    --ok-ink: hsl(150 30% 99%);
+    --copper: #8a6410;
+}
+
+/* ============================================================
+   The token layer. Everything below this point uses these and
+   nothing else. A literal colour in a component rule is a bug:
+   it will break in at least one of the sixteen combinations.
+   ============================================================ */
+html {
+    --bg:        hsl(var(--h) var(--s) var(--l-bg));
+    --card:      hsl(var(--h) var(--s) var(--l-card));
+    --sunken:    hsl(var(--h) var(--s) var(--l-sunken));
+    --raised:    hsl(var(--h) var(--s) var(--l-raised));
+    --line:      hsl(var(--h) calc(var(--s) * 0.85) var(--l-line));
+    --line-soft: hsl(var(--h) calc(var(--s) * 0.85) var(--l-soft));
+    --fg:        hsl(var(--h) calc(var(--s) * 0.30) var(--l-fg));
+    --fg-dim:    hsl(var(--h) calc(var(--s) * 0.35) var(--l-dim));
+    --fg-faint:  hsl(var(--h) calc(var(--s) * 0.35) var(--l-faint));
+
+    --accent:      hsl(var(--ah) var(--ac) var(--al));
+    --accent-soft: hsl(var(--ah) var(--ac) var(--al) / var(--soft));
+    --accent-ink:  var(--ink);
+
+    --toggle-on:  var(--ok);
+    --toggle-ink: var(--ok-ink);
+
+    --shadow: 0 1px 2px var(--sh);
+}
+/* Contour lifts its surfaces instead of outlining them. */
+html[data-design="contour"] {
+    --shadow: 0 1px 2px var(--sh), 0 18px 38px -26px var(--sh);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--ui);
+    font-size: 13.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Backdrop. One layer, four treatments, all built from tokens and
+   all pinned behind the content, so none of them can push a pixel. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+/* Instrument grid: a worksheet under the readout. */
+html[data-design="chamfer"] body::before {
+    background-image:
+        linear-gradient(var(--line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.4;
+}
+/* Scan rules: horizontal hairlines, close enough to read as a screen. */
+html[data-design="console"] body::before {
+    background-image: repeating-linear-gradient(180deg,
+        var(--line-soft) 0 1px, transparent 1px 6px);
+    opacity: 0.32;
+}
+/* Via holes: a plated ring around a hole the colour of the board. */
+html[data-design="circuit"] body::before {
+    background-image:
+        radial-gradient(circle, var(--line) 1.4px, transparent 1.6px),
+        radial-gradient(circle, var(--bg) 0.7px, transparent 0.9px);
+    background-size: 30px 30px, 30px 30px;
+    opacity: 0.55;
+}
+/* A single soft wash in the current accent, and nothing else. */
+html[data-design="contour"] body::before {
+    background-image: radial-gradient(880px 400px at 50% -190px,
+        var(--accent-soft), transparent 72%);
+    opacity: 1;
+}
+.topbar, .page, .footer, .notification { position: relative; z-index: 1; }
+
+h1, h2, h3 { margin: 0; font-weight: 600; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+::placeholder { color: var(--fg-faint); opacity: 1; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* The chamfer. A clip-path, so it costs no space and the same box
+   is still the same box in every other design. */
+.chamfer, .chamfer-sm { border-radius: var(--radius); }
+html[data-design="chamfer"] .chamfer {
+    border-radius: 0;
+    clip-path: polygon(var(--notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--notch));
+}
+html[data-design="chamfer"] .chamfer-sm {
+    border-radius: 0;
+    clip-path: polygon(var(--notch-sm) 0, 100% 0, 100% 100%, 0 100%, 0 var(--notch-sm));
+}
+@media print {
+    .chamfer, .chamfer-sm { clip-path: none !important; border-radius: 3px; }
+}
+
+/* ============================================================
+   Top bar
+   ============================================================ */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+}
+/* Circuit only: the gold contact fingers of a card-edge connector,
+   kept to a hairline so it reads as an edge and not a stripe. */
+html[data-design="circuit"] .topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: repeating-linear-gradient(90deg,
+        var(--copper) 0, var(--copper) 5px,
+        transparent 5px, transparent 8px);
+    opacity: 0.7;
+}
+/* Console only: the bar sits on a second hairline, like a rule under
+   a header in a terminal UI. Drawn as a shadow, so it takes no space. */
+html[data-design="console"] .topbar {
+    box-shadow: 0 3px 0 -1px var(--line-soft);
+}
+.topbar-inner {
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: var(--bar);
+}
+
+/* Terminal remnant: the name stays mono. No version here, it lives
+   in the footer where it does not compete with the mark. */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font);
+    font-size: 14px;
+    white-space: nowrap;
+}
+.brand .name { color: var(--fg); font-weight: 500; letter-spacing: 0.2px; }
+
+/* A lit indicator rather than a decoration: it breathes to say the tab
+   is alive, and its title is where the "runs local" claim actually
+   lives. Keep the claim true or remove the dot. */
+.pulse {
+    flex: 0 0 auto;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 5px var(--ok);
+    animation: breathe 2.6s ease-in-out infinite;
+}
+@keyframes breathe {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 1; }
+}
+
+/* Logo slot. One mark, every design: only the frame around it changes,
+   and the box is a fixed 30px square in all four so the bar never
+   shifts. Swap the SVG for the tool's own mark, drawn with
+   currentColor on a 32x32 viewBox so it follows the accent. */
+.logo {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ctl);
+    height: var(--ctl);
+    padding: 5px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    animation: logo-in 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.logo svg, .logo img { display: block; width: 100%; height: 100%; }
+.logo img { object-fit: contain; }
+html[data-design="chamfer"] .logo {
+    border-radius: 0;
+    clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
+}
+html[data-design="circuit"] .logo { border-color: var(--copper); }
+html[data-design="contour"] .logo { border-radius: 50%; }
+@keyframes logo-in {
+    from { opacity: 0; transform: scale(0.75); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .logo { animation: none; } }
+
+/* ---------- Tabs ---------- */
+.tabs { display: flex; gap: 2px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+    position: relative;
+    font: inherit;
+    font-size: 13px;
+    color: var(--fg-dim);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 6px 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+}
+.tab:hover { color: var(--fg); background: var(--sunken); }
+.tab[aria-selected="true"] { color: var(--accent); }
+/* Underline for the two hard-edged designs, drawn on a pseudo element
+   so the selected tab is exactly as tall as the others. */
+.tab::after {
+    content: "";
+    position: absolute;
+    left: 13px; right: 13px; bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.18s ease;
+}
+.tab[aria-selected="true"]::after { transform: scaleX(1); }
+html[data-design="console"] .tab[aria-selected="true"],
+html[data-design="contour"] .tab[aria-selected="true"] { background: var(--accent-soft); }
+html[data-design="console"] .tab::after,
+html[data-design="contour"] .tab::after { display: none; }
+html[data-design="contour"] .tab { border-radius: 999px; }
+html[data-design="circuit"] .tab[aria-selected="true"]::after { background: var(--copper); }
+
+/* ---------- Menus: design, mode, accent ---------- */
+.bar-tools { display: flex; align-items: center; gap: 2px; flex: 0 0 auto; }
+.menu-wrap { position: relative; flex: 0 0 auto; }
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ctl);
+    height: var(--ctl);
+    padding: 0;
+    color: var(--fg-dim);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.icon-btn:hover { color: var(--accent); background: var(--sunken); border-color: var(--line); }
+.icon-btn[aria-expanded="true"] { color: var(--accent); background: var(--accent-soft); border-color: var(--line); }
+.icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+
+.menu {
+    position: absolute;
+    top: 36px;
+    right: 0;
+    z-index: 60;
+    min-width: 208px;
+    padding: 6px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lift);
+}
+.menu[hidden] { display: none; }
+.menu-title {
+    font-family: var(--font);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    padding: 4px 8px 6px;
+}
+.opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    color: var(--fg);
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 9px;
+    cursor: pointer;
+}
+.opt:hover { background: var(--sunken); }
+.opt[aria-checked="true"] { color: var(--accent); }
+.opt .lbl { display: flex; flex-direction: column; line-height: 1.3; }
+.opt .lbl small { color: var(--fg-faint); font-size: 11px; }
+.opt .tick { margin-left: auto; font-family: var(--font); font-size: 12px; opacity: 0; }
+.opt[aria-checked="true"] .tick { opacity: 1; }
+
+/* Design swatch: a 16px sample of that design's actual shape and
+   backdrop, so the menu shows what it is rather than naming it. */
+.dsw {
+    flex: 0 0 auto;
+    width: 16px; height: 16px;
+    background: var(--sunken);
+    border: 1px solid var(--fg-faint);
+}
+.opt[data-set="chamfer"] .dsw { clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px); }
+.opt[data-set="console"] .dsw {
+    background-image: repeating-linear-gradient(180deg, var(--fg-faint) 0 1px, transparent 1px 4px);
+}
+.opt[data-set="circuit"] .dsw {
+    border-radius: 2px;
+    background-image: radial-gradient(circle, var(--fg-faint) 1.2px, transparent 1.4px);
+    background-size: 8px 8px;
+    background-position: 1px 1px;
+}
+.opt[data-set="contour"] .dsw { border-radius: 50%; }
+
+/* Mode swatch: the ramp itself, ink over paper. */
+.msw {
+    flex: 0 0 auto;
+    width: 16px; height: 16px;
+    border: 1px solid var(--fg-faint);
+    border-radius: 2px;
+}
+.opt[data-set="dark"]  .msw { background: linear-gradient(135deg, hsl(215 20% 46%) 50%, hsl(215 20% 7%) 50%); }
+.opt[data-set="dusk"]  .msw { background: linear-gradient(135deg, hsl(215 18% 62%) 50%, hsl(215 18% 20%) 50%); }
+.opt[data-set="sepia"] .msw { background: linear-gradient(135deg, hsl(36 28% 28%) 50%, hsl(36 30% 92%) 50%); }
+.opt[data-set="light"] .msw { background: linear-gradient(135deg, hsl(215 14% 30%) 50%, hsl(215 14% 100%) 50%); }
+
+/* Accent picker. The swatches are painted by the script using the
+   live formula, so each one previews the hue as the current mode
+   will actually render it. */
+.swatches {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 4px 8px 8px;
+}
+.swatch {
+    height: 26px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+.swatch:hover { transform: translateY(-1px); }
+.swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--fg); }
+/* The wheel replaces the browser's colour input. Hue is the angle and
+   chroma is the radius, which is the whole of what the accent takes
+   from a pick: lightness is the mode's job. The rim is drawn by the
+   script at the lightness the active mode will actually render, and
+   the middle fades into the surface underneath, so the control is a
+   preview of the palette rather than a generic spectrum. */
+.wheel-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 8px 6px;
+    border-top: 1px solid var(--line-soft);
+}
+.wheel {
+    position: relative;
+    width: 116px;
+    height: 116px;
+    border-radius: 50%;
+    cursor: crosshair;
+    touch-action: none;
+    box-shadow: 0 0 0 1px var(--line);
+}
+.wheel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, var(--card) 5%, transparent 64%);
+    pointer-events: none;
+}
+.wheel-dot {
+    position: absolute;
+    width: 13px; height: 13px;
+    margin: -6.5px 0 0 -6.5px;
+    border-radius: 50%;
+    border: 2px solid var(--card);
+    box-shadow: 0 0 0 1px var(--fg);
+    pointer-events: none;
+}
+.accent-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    font-size: 12px;
+    color: var(--fg-dim);
+}
+.accent-foot .now { font-family: var(--font); color: var(--fg); }
+/* Kept alongside the wheel for the one case the wheel is bad at:
+   matching a brand colour exactly. */
+.hexin {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--font);
+    color: var(--fg-faint);
+}
+.hexin .field { width: 66px; padding: 4px 6px; font-size: 11.5px; }
+
+/* ============================================================
+   Page
+   ============================================================ */
+.page { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 22px 20px 34px; flex: 1 0 auto; }
+section[hidden] { display: none; }
+
+/* Terminal remnant: a mono status line under the bar. */
+.statusline {
+    font-family: var(--font);
+    font-size: 12px;
+    color: var(--fg-faint);
+    margin-bottom: 18px;
+}
+.statusline b { color: var(--fg-dim); font-weight: 500; }
+.statusline .chev { color: var(--accent); }
+
+.panel {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--pad);
+    margin-bottom: 16px;
+}
+html[data-design="chamfer"] .panel {
+    border-radius: 0;
+    clip-path: polygon(var(--notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--notch));
+}
+/* Console: an accent rule down the binding edge. Absolute, so the
+   18px of padding is still 18px. */
+html[data-design="console"] .panel::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0.55;
+}
+/* Circuit: a fiducial in the corner, the way a board marks its own
+   orientation. Sits in the padding, never in the content. */
+html[data-design="circuit"] .panel::before {
+    content: "";
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    border: 1.5px solid var(--copper);
+    border-radius: 50%;
+    opacity: 0.65;
+}
+@media print { .panel { clip-path: none !important; } .panel::before { display: none; } }
+
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap);
+    margin-bottom: var(--gap);
+}
+.panel-head h2 { font-size: 14.5px; }
+.panel-head .sub {
+    font-family: var(--font);
+    font-size: 11px;
+    color: var(--fg-faint);
+}
+.panel-head .sub::before { content: "["; }
+.panel-head .sub::after  { content: "]"; }
+.prose { max-width: var(--read); color: var(--fg-dim); }
+
+/* ============================================================
+   Controls
+   ============================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 14px;
+    font: inherit;
+    font-size: 13px;
+    color: var(--fg);
+    background: var(--raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn:disabled:hover { color: var(--fg); border-color: var(--line); background: var(--raised); }
+
+.btn-primary {
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.btn-primary:hover { color: var(--accent-ink); background: var(--accent); filter: brightness(1.08); }
+html[data-design="chamfer"] .btn-primary {
+    border-radius: 0;
+    clip-path: polygon(var(--notch-sm) 0, 100% 0, 100% 100%, 0 100%, 0 var(--notch-sm));
+}
+html[data-design="contour"] .btn, html[data-design="contour"] .btn-primary { border-radius: 999px; }
+.btn-danger:hover { color: var(--bad); border-color: var(--bad); background: transparent; }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--fg-dim); }
+.btn-ghost:hover { background: var(--sunken); border-color: var(--line); }
+
+/* ---------- Inputs: mono, because they hold data ---------- */
+.field {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 12.5px;
+    color: var(--fg);
+    background: var(--sunken);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+}
+.field:hover { border-color: var(--fg-faint); }
+.field:focus { border-color: var(--accent); background: var(--card); }
+textarea.field { line-height: 1.6; resize: vertical; }
+select.field { cursor: pointer; }
+
+label.f {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--fg-dim);
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--gap); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.spacer { flex: 1; }
+
+/* ---------- Toggles ---------- */
+.toggle-group { display: flex; flex-direction: column; gap: 12px; }
+.toggle-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px; }
+.toggle-label { font-size: 13px; color: var(--fg); }
+
+.toggle-switch {
+    position: relative;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+}
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--fg-faint);
+    transition: transform 0.18s, background 0.18s;
+}
+.toggle-switch.active { background: var(--toggle-on); border-color: var(--toggle-on); }
+.toggle-switch.active::after { transform: translateX(18px); background: var(--toggle-ink); }
+
+/* ---------- Drop zone ---------- */
+.drop {
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 24px 14px;
+    text-align: center;
+    color: var(--fg-dim);
+    background: var(--sunken);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+html[data-design="chamfer"] .drop {
+    border-radius: 0;
+    clip-path: polygon(var(--notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--notch));
+}
+.drop:hover, .drop.over { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.drop b { display: block; margin-bottom: 2px; color: var(--fg); font-weight: 500; }
+.drop:hover b { color: var(--accent); }
+@media print { .drop { clip-path: none !important; } }
+
+/* ---------- Data text ---------- */
+pre {
+    margin: 0;
+    padding: 12px;
+    max-height: 340px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--font);
+    font-size: 12.5px;
+    line-height: 1.6;
+    background: var(--sunken);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+code { font-family: var(--font); font-size: 12px; }
+mark { background: var(--accent-soft); color: var(--accent); border-radius: 3px; padding: 1px 3px; }
+.log { font-family: var(--font); font-size: 12px; color: var(--fg-dim); }
+.log .ok { color: var(--ok); } .log .warn { color: var(--warn); }
+.log .bad { color: var(--bad); } .log .a { color: var(--accent); }
+.note { font-size: 12px; line-height: 1.6; color: var(--fg-dim); }
+.note code { color: var(--accent); }
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    color: var(--fg-dim);
+}
+.pill.ok { color: var(--ok); border-color: var(--ok); }
+.pill.warn { color: var(--warn); border-color: var(--warn); }
+.pill.bad { color: var(--bad); border-color: var(--bad); }
+
+/* ---------- Table ---------- */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+    text-align: left;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-dim);
+    border-bottom: 1px solid var(--line);
+}
+/* Console: column heads read as a header row in a log, not a web table. */
+html[data-design="console"] th {
+    font-family: var(--font);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+}
+td { padding: 6px 8px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+table tr:hover td { background: var(--sunken); }
+td .field { padding: 5px 8px; }
+.empty {
+    padding: 28px;
+    text-align: center;
+    color: var(--fg-dim);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   Footer: where the version lives
+   ============================================================ */
+.footer {
+    width: 100%;
+    max-width: var(--wrap);
+    margin: 0 auto;
+    padding: 12px 20px 34px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: var(--font);
+    font-size: 11.5px;
+    color: var(--fg-faint);
+    border-top: 1px solid var(--line-soft);
+}
+.footer .sep { opacity: 0.5; }
+.footer .ver { color: var(--fg-dim); }
+.footer .right { margin-left: auto; }
+
+/* ============================================================
+   Notification
+   ============================================================ */
+.notification {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    font-family: var(--font);
+    font-size: 12.5px;
+    color: var(--fg);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lift);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-6px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+.notification::before { content: ">"; color: var(--accent); }
+.notification.show { opacity: 1; transform: translateX(0); }
+.notification.error { border-left-color: var(--bad); }
+.notification.error::before { content: "!"; color: var(--bad); }
+
+/* The toast follows the design like every other surface: it is the one
+   piece of chrome that appears over content, so a rounded pill floating
+   above a hard-edged page is exactly where the seam would show. It is
+   also the one element whose width is free to move, since it is fixed
+   to the corner and nothing reflows around it. */
+html[data-design="chamfer"] .notification {
+    border-radius: 0;
+    clip-path: polygon(var(--notch-sm) 0, 100% 0, 100% 100%, 0 100%, 0 var(--notch-sm));
+    /* the clip eats the left border, so the accent edge is redrawn inside it */
+    border-left-width: 1px;
+    box-shadow: inset 2px 0 0 var(--accent), var(--shadow-lift);
+}
+html[data-design="chamfer"] .notification.error {
+    box-shadow: inset 2px 0 0 var(--bad), var(--shadow-lift);
+}
+html[data-design="console"] .notification {
+    border-radius: 0;
+    border-left-width: 3px;
+}
+html[data-design="circuit"] .notification {
+    border-left-color: var(--copper);
+}
+html[data-design="circuit"] .notification::before { color: var(--copper); }
+html[data-design="circuit"] .notification.error { border-left-color: var(--bad); }
+/* Contour has no prompt chevron anywhere else, so it gets a lit dot
+   instead: same 1ch of space, no reflow against the other designs. */
+html[data-design="contour"] .notification {
+    border-radius: 999px;
+    padding: 9px 16px;
+    border-left-width: 1px;
+    border-left-color: var(--line);
+}
+html[data-design="contour"] .notification::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+html[data-design="contour"] .notification.error::before { background: var(--bad); }
+@media print { .notification { clip-path: none !important; } }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 760px) {
+    .topbar-inner { flex-wrap: wrap; gap: 10px; padding: 8px 14px; }
+    .tabs { order: 3; width: 100%; margin-left: 0; }
+    .bar-tools { margin-left: auto; }
+    .page { padding: 16px 14px 28px; }
+    .footer { padding: 12px 14px 28px; }
+    .panel { padding: 14px; }
+    .grid { grid-template-columns: 1fr; }
+    .menu { min-width: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* ============================================================
+   The tool: request form, placeholders, template list
+   ============================================================ */
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+.grid + .stack { margin-top: var(--gap); }
+
+/* A field is a label row and a control. The per-field copy button
+   lives in the label row rather than floating over the input, so it
+   cannot sit on top of the text it is meant to copy. */
+.fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.fld-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 26px; }
+.fld-head label { font-size: 12px; color: var(--fg-dim); }
+.fld-head .btn { opacity: 0; }
+.fld:hover .fld-head .btn,
+.fld:focus-within .fld-head .btn { opacity: 1; }
+@media (hover: none) { .fld-head .btn { opacity: 1; } }
+
+.ph-grid { display: flex; flex-direction: column; gap: 8px; }
+.ph-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ph-name { flex: 0 0 auto; min-width: 156px; color: var(--accent); font-size: 12px; }
+.ph-row .field { flex: 1 1 220px; width: auto; }
+
+.tpl-name { font-family: var(--font); font-size: 12.5px; }
+.tpl-sum { font-family: var(--font); font-size: 12px; color: var(--fg-dim); white-space: nowrap; }
+.tpl-actions { flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+tr.is-current .tpl-name { color: var(--accent); }
+
+/* On a phone a four-up row of buttons does not fit beside a name, so the
+   row stacks: name, summary, actions. The head row goes, since each line
+   then says what it is on its own. */
+@media (max-width: 620px) {
+    #tplList table, #tplList tr, #tplList td { display: block; width: 100%; }
+    #tplList tr:first-child { display: none; }
+    #tplList tr { padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
+    #tplList tr:last-child { border-bottom: none; }
+    #tplList td { padding: 1px 0; border: none; }
+    #tplList .tpl-actions { justify-content: flex-start; margin-top: 6px; }
+}
+
+/* Paper only. Built by renderPrintout(), because a textarea prints
+   whatever fits in the box and silently drops the rest. */
+.printonly { display: none; }
+
+/* ============================================================
+   Print: one light palette for every design and mode
+   ============================================================ */
+@media print {
+    html, html[data-mode="dark"], html[data-mode="dusk"],
+    html[data-mode="sepia"], html[data-mode="light"] {
+        color-scheme: light;
+        --bg: #ffffff; --card: #ffffff; --sunken: #fafafa; --raised: #ffffff;
+        --line: #999999; --line-soft: #cccccc;
+        --fg: #111111; --fg-dim: #555555; --fg-faint: #777777;
+        --accent: #333333; --accent-soft: transparent; --accent-ink: #ffffff;
+        --copper: #555555;
+        --shadow: none; --shadow-lift: none;
+    }
+    body::before { display: none !important; }
+    body { font-size: 11pt; }
+    .tabs, .bar-tools, .drop, .notification, .btn, .noprint { display: none !important; }
+    /* The bar survives as a masthead so the logo and name land on the page. */
+    .topbar { position: static; background: none; border-bottom: 1px solid #999; box-shadow: none; }
+    .topbar::after { display: none !important; }
+    .topbar-inner { max-width: none; padding: 0 0 8px; min-height: 0; }
+    .logo { color: #111; background: none; }
+    .page { max-width: none; padding: 0; }
+    .panel { border: none; padding: 0; margin-bottom: 18px; break-inside: avoid; page-break-inside: avoid; }
+    .footer { max-width: none; padding: 10px 0 0; }
+    /* Paper always gets the request, whichever tab is open, and gets it
+       as the readout rather than as ten half-clipped textareas. */
+    .statusline { display: none !important; }
+    section[hidden] { display: none !important; }
+    #pane-request { display: block !important; }
+    #pane-request .panel { display: none !important; }
+    .printonly { display: block !important; }
+    .pr-title { font-size: 15pt; margin-bottom: 10px; }
+    .pr-sec { margin-bottom: 13px; break-inside: avoid; page-break-inside: avoid; }
+    .pr-h { font-size: 11.5pt; margin-bottom: 3px; }
+    .pr-body {
+        margin: 0; padding: 0; max-height: none; border: none; background: none;
+        font-family: var(--ui); font-size: 10.5pt; line-height: 1.45;
+        white-space: pre-wrap; word-break: normal;
+    }
+    a[href]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <script crossorigin src="js/react.production.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/react@18/umd/react.production.min.js';"></script>
-  <script crossorigin src="js/react-dom.production.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';"></script>
-  <script src="js/babel.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/@babel/standalone/babel.min.js';"></script>
-  <script src="js/purify.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js';"></script>
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="brand">
+            <span class="logo" aria-hidden="true">
+                <!-- A request sheet with a change moving through it. One mark, every
+                     design: currentColor only, 32x32, so it follows the accent. -->
+                <svg viewBox="0 0 32 32">
+                    <path d="M7 4h11l7 7v17H7z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+                    <path d="M17.5 4v8h7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+                    <path d="M11 21h10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                    <path d="M17.6 17.4 21.6 21l-4 3.6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <span class="name">change-manager</span>
+            <span class="pulse" title="Templates are kept in this browser. The only network call is a library URL you choose to import."></span>
+        </div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;// Security utilities
-    const SecurityUtils = {
+        <nav class="tabs" role="tablist">
+            <button class="tab" id="tab-request" role="tab" aria-selected="true" aria-controls="pane-request">Request</button>
+            <button class="tab" id="tab-templates" role="tab" aria-selected="false" aria-controls="pane-templates">Templates</button>
+            <button class="tab" id="tab-about" role="tab" aria-selected="false" aria-controls="pane-about">About</button>
+        </nav>
 
-      // Validate URL is HTTPS only
-      validateURL: (url) => {
-        try {
-          const parsed = new URL(url);
-          if (parsed.protocol !== 'https:') {
-            throw new Error('Only HTTPS URLs are allowed for security');
-          }
-          return true;
-        } catch (e) {
-          throw new Error(`Invalid URL: ${e.message}`);
-        }
-      },
+        <div class="bar-tools">
 
-      // JSON Schema validator for templates
-      validateTemplateSchema: (data) => {
-        // Check if it's an array or single template
-        const templates = Array.isArray(data) ? data : [data];
-        
-        for (const template of templates) {
-          // Must have name and data
-          if (!template.name || typeof template.name !== 'string') {
-            throw new Error('Template must have a valid "name" field');
-          }
-          
-          if (!template.data || typeof template.data !== 'object') {
-            throw new Error('Template must have a valid "data" field');
-          }
-
-          // Validate data structure matches expected fields
-          const validFields = ['typeOfChange', 'duration', 'downtime', 'reason', 
-                               'steps', 'testPlan', 'risks', 'securityRisks', 
-                               'backupPlan', 'expectedResults'];
-          
-          for (const key in template.data) {
-            if (!validFields.includes(key)) {
-              throw new Error(`Invalid field "${key}" in template data`);
-            }
-            
-            // All values must be strings
-            if (typeof template.data[key] !== 'string') {
-              throw new Error(`Field "${key}" must be a string`);
-            }
-          }
-
-        }
-        
-        return templates;
-      }
-    };
-
-    // Field configuration - single source of truth
-    const FIELDS = [
-      {
-        id: 'typeOfChange',
-        label: 'Type of Change',
-        type: 'select',
-        options: ['Normal', 'Standard', 'Emergency'],
-        fullWidth: false
-      },
-      {
-        id: 'duration',
-        label: 'Duration (in minutes)',
-        type: 'number',
-        placeholder: 'e.g., 60',
-        fullWidth: false
-      },
-      {
-        id: 'downtime',
-        label: 'Length of Downtime (in minutes)',
-        type: 'number',
-        placeholder: 'e.g., 30',
-        fullWidth: false
-      },
-      {
-        id: 'reason',
-        label: 'Reason for Change',
-        type: 'textarea',
-        placeholder: 'Why is the change required?\nIs there a Business, operational, or technical driver.\nWhat problem is being solved or improvement delivered?',
-        fullWidth: true
-      },
-      {
-        id: 'steps',
-        label: 'Steps Involved',
-        type: 'textarea',
-        placeholder: 'Clear, ordered implementation steps.\nInclude tools, systems, and teams involved.\nSufficient detail for another engineer to execute.',
-        fullWidth: true
-      },
-      {
-        id: 'testPlan',
-        label: 'Test Plan',
-        type: 'textarea',
-        placeholder: 'Pre-change checks to establish a baseline.\nPre-change testing performed.\nPost-change validation to confirm success.\nFunctional and service availability checks.',
-        fullWidth: true
-      },
-      {
-        id: 'risks',
-        label: 'Risks',
-        type: 'textarea',
-        placeholder: 'Potential impact to: users, business operations, infrastructure.\nWhat mitigations have been considered?\nLikelihood and severity in plain language.',
-        fullWidth: true
-      },
-      {
-        id: 'securityRisks',
-        label: 'Security Risks',
-        type: 'textarea',
-        placeholder: 'Security impact of change, any risk to confidentiality, integrity, or availability.\nAccess, privilege, exposure, or compliance considerations.\nExplicitly state if risk is low or none.',
-        fullWidth: true
-      },
-      {
-        id: 'backupPlan',
-        label: 'Backup/Contingency for Failure',
-        type: 'textarea',
-        placeholder: 'Rollback steps if change fails.\nIs there a confirmed backup/restore point available?\nWho is responsible and how quick is recovery?',
-        fullWidth: true
-      },
-      {
-        id: 'expectedResults',
-        label: 'Expected Consequences/Results',
-        type: 'textarea',
-        placeholder: 'What does success looks like after completion.\nMeasurable or observable outcomes.\nServices, performance, or risk posture post-change.',
-        fullWidth: true
-      }
-    ];
-
-    const STORAGE_KEY = 'changeRequestTemplates';
-    const DEFAULT_CENTRAL_URL = '';
-
-    function App() {
-      const [formData, setFormData] = useState(() => 
-        FIELDS.reduce((acc, field) => ({ ...acc, [field.id]: '' }), {})
-      );
-      const [templates, setTemplates] = useState([]);
-      const [currentTemplateName, setCurrentTemplateName] = useState('');
-      const [showSaveModal, setShowSaveModal] = useState(false);
-      const [showImportModal, setShowImportModal] = useState(false);
-      const [saveAsNew, setSaveAsNew] = useState(false);
-      const [notification, setNotification] = useState(null);
-      const [placeholders, setPlaceholders] = useState({});
-      const [currentView, setCurrentView] = useState('form'); // 'form' or 'templates'
-      const [filterText, setFilterText] = useState('');
-      const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'terminal');
-      const fileInputRef = useRef(null);
-
-      useEffect(() => {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          try {
-            setTemplates(JSON.parse(stored));
-          } catch (e) {
-            console.error('Error loading templates:', e);
-          }
-        }
-      }, []);
-
-      useEffect(() => {
-        detectPlaceholders();
-      }, [formData]);
-
-      useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-      }, [theme]);
-
-      const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : prev === 'dark' ? 'terminal' : 'light');
-      };
-
-      const detectPlaceholders = () => {
-        const allText = Object.values(formData).join(' ');
-        const regex = /<([^>]+)>/g;
-        const found = {};
-        let match;
-        
-        while ((match = regex.exec(allText)) !== null) {
-          const placeholder = match[1];
-          if (!found[placeholder]) {
-            found[placeholder] = placeholders[placeholder] || '';
-          }
-        }
-        
-        setPlaceholders(found);
-      };
-
-      const saveToStorage = (newTemplates) => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newTemplates));
-        setTemplates(newTemplates);
-      };
-
-      const showNotification = (message, type = 'success') => {
-        setNotification({ message, type });
-        setTimeout(() => setNotification(null), 3000);
-      };
-
-      const handleInputChange = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-      };
-
-      const handleSaveTemplate = (name) => {
-        if (!name.trim()) {
-          showNotification('Template name cannot be empty', 'error');
-          return;
-        }
-
-        const existingIndex = templates.findIndex(t => t.name === name);
-        const newTemplates = [...templates];
-        const newTemplate = { name, data: formData };
-
-        if (existingIndex !== -1) {
-          newTemplates[existingIndex] = newTemplate;
-        } else {
-          newTemplates.push(newTemplate);
-        }
-
-        saveToStorage(newTemplates);
-        setCurrentTemplateName(name);
-        setShowSaveModal(false);
-        showNotification(`Template "${name}" saved successfully`);
-      };
-
-      const handleLoadTemplate = (template) => {
-        setFormData(template.data);
-        setCurrentTemplateName(template.name);
-        setCurrentView('form');
-        showNotification(`Template "${template.name}" loaded`);
-      };
-
-      const handleDeleteTemplate = (templateName) => {
-        if (confirm(`Delete template "${templateName}"?`)) {
-          const newTemplates = templates.filter(t => t.name !== templateName);
-          saveToStorage(newTemplates);
-          if (currentTemplateName === templateName) {
-            setCurrentTemplateName('');
-          }
-          showNotification(`Template "${templateName}" deleted`);
-        }
-      };
-
-      const handleNewTemplate = () => {
-        setFormData(FIELDS.reduce((acc, field) => ({ ...acc, [field.id]: '' }), {}));
-        setCurrentTemplateName('');
-        showNotification('New template created');
-      };
-
-      const handleCopy = (text, label) => {
-        navigator.clipboard.writeText(text).then(() => {
-          showNotification(`${label} copied to clipboard`);
-        });
-      };
-
-      const handleReplacePlaceholders = () => {
-        const newFormData = { ...formData };
-        
-        Object.keys(placeholders).forEach(placeholder => {
-          const replacement = placeholders[placeholder];
-          if (replacement) {
-            Object.keys(newFormData).forEach(field => {
-              newFormData[field] = newFormData[field].replace(
-                new RegExp(`<${placeholder}>`, 'g'),
-                replacement
-              );
-            });
-          }
-        });
-        
-        setFormData(newFormData);
-        showNotification('Placeholders replaced successfully');
-      };
-
-      const handlePlaceholderChange = (placeholder, value) => {
-        setPlaceholders(prev => ({ ...prev, [placeholder]: value }));
-      };
-
-      const handleCopyAll = () => {
-        const sections = FIELDS.map(field => {
-          const value = formData[field.id];
-          if (!value) return null;
-          return `**${field.label}**\n${value}`;
-        }).filter(Boolean);
-        
-        const fullText = sections.join('\n\n');
-        
-        navigator.clipboard.writeText(fullText).then(() => {
-          showNotification('All fields copied to clipboard');
-        }).catch(() => {
-          showNotification('Failed to copy to clipboard', 'error');
-        });
-      };
-
-      const downloadJSON = (data, filename) => {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        link.click();
-        URL.revokeObjectURL(url);
-      };
-
-      const handleExportTemplate = (template) => {
-        downloadJSON(template, `${template.name}.json`);
-        showNotification(`Template "${template.name}" exported`);
-      };
-
-      const handleExportAll = () => {
-        downloadJSON(templates, 'change-request-templates.json');
-        showNotification('All templates exported');
-      };
-
-      const handleImportTemplates = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const imported = JSON.parse(e.target.result);
-            
-            // Validate and sanitize the imported templates
-            const validatedTemplates = SecurityUtils.validateTemplateSchema(imported);
-            
-            const newTemplates = [...templates];
-
-            validatedTemplates.forEach(template => {
-              const existingIndex = newTemplates.findIndex(t => t.name === template.name);
-              if (existingIndex !== -1) {
-                newTemplates[existingIndex] = template;
-              } else {
-                newTemplates.push(template);
-              }
-            });
-
-            saveToStorage(newTemplates);
-            showNotification(`${validatedTemplates.length} template(s) imported`);
-          } catch (error) {
-            showNotification(`Import failed: ${error.message}`, 'error');
-          }
-        };
-        reader.readAsText(file);
-        event.target.value = '';
-      };
-
-      const importFromURL = async (url) => {
-        try {
-          // Validate URL is HTTPS
-          SecurityUtils.validateURL(url);
-          
-          const response = await fetch(url);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          const imported = await response.json();
-          
-          // Validate and sanitize the imported templates
-          const validatedTemplates = SecurityUtils.validateTemplateSchema(imported);
-          
-          const newTemplates = [...templates];
-
-          validatedTemplates.forEach(template => {
-            const existingIndex = newTemplates.findIndex(t => t.name === template.name);
-            if (existingIndex !== -1) {
-              newTemplates[existingIndex] = template;
-            } else {
-              newTemplates.push(template);
-            }
-          });
-
-          saveToStorage(newTemplates);
-          showNotification(`${validatedTemplates.length} template(s) imported from URL`);
-          setShowImportModal(false);
-          return true;
-        } catch (error) {
-          throw error;
-        }
-      };
-
-      const filteredTemplates = templates.filter(template =>
-        template.name.toLowerCase().includes(filterText.toLowerCase())
-      );
-
-      return (
-        <div className="app">
-          <div className="sidebar">            
-            <header>
-              <h1>CR Template Manager</h1>
-              <div className="subtitle">Version v1.2</div>
-            </header>
-
-            <div className="sidebar-content">
-              <div className="controls">
-                <button 
-                  className="primary" 
-                  onClick={() => setCurrentView(currentView === 'form' ? 'templates' : 'form')}
-                >
-                  {currentView === 'form' ? 'View Templates' : 'Back to Form'}
+            <!-- Design -->
+            <div class="menu-wrap">
+                <button class="icon-btn" id="designBtn" type="button" aria-haspopup="true" aria-expanded="false"
+                        aria-label="Design" title="Design">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 9V4h5"></path><path d="M20 15v5h-5"></path>
+                        <rect x="4" y="9" width="16" height="11"></rect>
+                    </svg>
                 </button>
-                <button className="primary" onClick={handleCopyAll}>
-                  Copy All Fields
-                </button>
-                <button className="primary" onClick={() => { setSaveAsNew(false); setShowSaveModal(true); }}>
-                  {currentTemplateName ? 'Save Template' : 'Save As Template'}
-                </button>
-                <button onClick={() => { setSaveAsNew(true); setShowSaveModal(true); }}>
-                  Save As New
-                </button>
-                <button onClick={handleNewTemplate}>New Template</button>
-                <button onClick={handleExportAll} disabled={templates.length === 0}>Export All</button>
-                <button onClick={() => fileInputRef.current.click()}>Import File</button>
-                <button onClick={() => setShowImportModal(true)}>Import from URL</button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json"
-                  onChange={handleImportTemplates}
-                  className="hidden"
-                />
-              </div>
+                <div class="menu" id="designMenu" role="menu" hidden>
+                    <div class="menu-title">Design</div>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="chamfer">
+                        <span class="dsw" aria-hidden="true"></span>
+                        <span class="lbl">Chamfer<small>cut corners, instrument grid</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="console">
+                        <span class="dsw" aria-hidden="true"></span>
+                        <span class="lbl">Console<small>square, graphite, scan rules</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="circuit">
+                        <span class="dsw" aria-hidden="true"></span>
+                        <span class="lbl">Circuit<small>board colours, via grid, copper</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="contour">
+                        <span class="dsw" aria-hidden="true"></span>
+                        <span class="lbl">Contour<small>soft radii, accent wash</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                </div>
             </div>
 
-            {Object.keys(placeholders).length > 0 && currentView === 'form' && (
-              <div className="placeholders-section">
-                <div className="templates-header">Placeholders ({Object.keys(placeholders).length})</div>
-                {Object.keys(placeholders).map(placeholder => (
-                  <div key={placeholder} className="placeholder-item">
-                    <div className="placeholder-label">&lt;{placeholder}&gt;</div>
-                    <input
-                      type="text"
-                      value={placeholders[placeholder]}
-                      onChange={(e) => handlePlaceholderChange(placeholder, e.target.value)}
-                      placeholder="Enter replacement value..."
-                    />
-                  </div>
-                ))}
-                <button className="primary replace-all-btn" onClick={handleReplacePlaceholders}>
-                  Replace All
+            <!-- Mode -->
+            <div class="menu-wrap">
+                <button class="icon-btn" id="modeBtn" type="button" aria-haspopup="true" aria-expanded="false"
+                        aria-label="Mode" title="Mode">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"></path>
+                    </svg>
                 </button>
-              </div>
-            )}
-          </div>
-
-          <div className="main-content">
-            {currentView === 'form' ? (
-              <form onSubmit={(e) => e.preventDefault()}>
-                <div className="form-grid">
-                  {FIELDS.map((field, index) => (
-                    <FormField
-                      key={field.id}
-                      field={field}
-                      value={formData[field.id]}
-                      onChange={(value) => handleInputChange(field.id, value)}
-                      onCopy={(text) => handleCopy(text, field.label)}
-                      index={index}
-                    />
-                  ))}
+                <div class="menu" id="modeMenu" role="menu" hidden>
+                    <div class="menu-title">Mode</div>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="dark">
+                        <span class="msw" aria-hidden="true"></span>
+                        <span class="lbl">Dark<small>default, lights off</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="dusk">
+                        <span class="msw" aria-hidden="true"></span>
+                        <span class="lbl">Dusk<small>dark, lifted off black</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="sepia">
+                        <span class="msw" aria-hidden="true"></span>
+                        <span class="lbl">Sepia<small>warm paper, low glare</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
+                    <button class="opt" role="menuitemradio" aria-checked="false" data-set="light">
+                        <span class="msw" aria-hidden="true"></span>
+                        <span class="lbl">Light<small>cool white</small></span>
+                        <span class="tick" aria-hidden="true">&check;</span>
+                    </button>
                 </div>
-              </form>
-            ) : (
-              <div className="templates-main-view">
-                <h2 style={{ 
-                  fontSize: '2rem', 
-                  marginBottom: '1.5rem', 
-                  color: 'var(--text-primary)',
-                  fontWeight: 600
-                }}>
-                  Saved Templates ({templates.length})
-                </h2>
-                {templates.length > 0 && (
-                  <input
-                    type="text"
-                    className="filter-input"
-                    placeholder="Filter templates..."
-                    value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)}
-                  />
-                )}
-                {templates.length > 0 ? (
-                  <div className="templates-main-list">
-                    {filteredTemplates.length > 0 ? (
-                      filteredTemplates.map((template, index) => (
-                        <div key={index} className="template-item">
-                          <span className="template-name">{template.name}</span>
-                          <div className="template-actions">
-                            <button onClick={() => handleLoadTemplate(template)}>Load</button>
-                            <button onClick={() => handleExportTemplate(template)}>Export</button>
-                            <button className="danger" onClick={() => handleDeleteTemplate(template.name)}>Delete</button>
-                          </div>
+            </div>
+
+            <!-- Accent -->
+            <div class="menu-wrap">
+                <button class="icon-btn" id="accentBtn" type="button" aria-haspopup="true" aria-expanded="false"
+                        aria-label="Accent colour" title="Accent colour">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"></circle>
+                    </svg>
+                </button>
+                <div class="menu" id="accentMenu" role="menu" hidden>
+                    <div class="menu-title">Accent</div>
+                    <div class="swatches" id="swatches"></div>
+                    <div class="wheel-wrap">
+                        <div class="wheel" id="wheel" tabindex="0" role="slider"
+                             aria-label="Accent colour wheel. Left and right change hue, up and down change intensity."
+                             aria-valuemin="0" aria-valuemax="359" aria-valuenow="178" aria-valuetext="Teal">
+                            <span class="wheel-dot" id="wheelDot" aria-hidden="true"></span>
                         </div>
-                      ))
-                    ) : (
-                      <div className="empty-templates">
-                        <p>No templates match your filter</p>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="empty-templates">
-                    <h3>No Templates Yet</h3>
-                    <p>Create a template by filling in the form and clicking "Save As Template"</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {showSaveModal && (
-            <SaveModal
-              currentName={saveAsNew ? '' : currentTemplateName}
-              onSave={handleSaveTemplate}
-              onClose={() => setShowSaveModal(false)}
-            />
-          )}
-
-          {showImportModal && (
-            <ImportURLModal
-              defaultURL={DEFAULT_CENTRAL_URL}
-              onImport={importFromURL}
-              onClose={() => setShowImportModal(false)}
-            />
-          )}
-
-          {notification && (
-            <div className={`notification ${notification.type}`}>
-              {notification.message}
-            </div>
-          )}
-
-          <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
-            {theme === 'light' ? '☀️' : theme === 'dark' ? '🌙' : '💻'}
-          </button>
-        </div>
-      );
-    }
-
-    function FormField({ field, value, onChange, onCopy, index }) {
-      const renderInput = () => {
-        const commonProps = {
-          value,
-          onChange: (e) => onChange(e.target.value)
-        };
-
-        switch (field.type) {
-          case 'select':
-            return (
-              <select {...commonProps}>
-                <option value="">Select{field.options ? '...' : ''}</option>
-                {field.options?.map(opt => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-            );
-          case 'textarea':
-            return (
-              <textarea
-                {...commonProps}
-                placeholder={field.placeholder}
-              />
-            );
-          case 'number':
-            return (
-              <input
-                type="number"
-                {...commonProps}
-                placeholder={field.placeholder}
-              />
-            );
-          default:
-            return (
-              <input
-                type="text"
-                {...commonProps}
-                placeholder={field.placeholder}
-              />
-            );
-        }
-      };
-
-      return (
-        <div 
-          className={`form-field ${field.fullWidth ? 'full-width' : ''}`}
-          style={{ animationDelay: `${0.1 + index * 0.05}s` }}
-        >
-          <label>{field.label}</label>
-          <div className="field-with-copy">
-            {renderInput()}
-            {value && (
-              <button
-                type="button"
-                className="copy-btn"
-                onClick={() => onCopy(value)}
-              >
-                Copy
-              </button>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    function SaveModal({ currentName, onSave, onClose }) {
-      const [name, setName] = useState(currentName);
-
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        onSave(name);
-      };
-
-      return (
-        <div className="modal" onClick={onClose}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-header">Save Template</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-field">
-                <label>Template Name</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter template name..."
-                  autoFocus
-                />
-              </div>
-              <div className="modal-actions">
-                <button type="button" onClick={onClose}>Cancel</button>
-                <button type="submit" className="primary">Save</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      );
-    }
-
-    function ImportURLModal({ defaultURL, onImport, onClose }) {
-      const [url, setUrl] = useState(defaultURL);
-      const [status, setStatus] = useState(null);
-      const [loading, setLoading] = useState(false);
-
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setStatus({ type: 'loading', message: 'Validating and importing templates...' });
-
-        try {
-          await onImport(url);
-          setStatus(null);
-        } catch (error) {
-          setStatus({ 
-            type: 'error', 
-            message: `Failed to import: ${error.message}` 
-          });
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      return (
-        <div className="modal" onClick={onClose}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-header">Import from URL</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-field">
-                <label>Template URL (HTTPS only)</label>
-                <input
-                  type="text"
-                  className="import-url-input"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com/templates.json"
-                  autoFocus
-                  disabled={loading}
-                />
-                <p style={{ 
-                  fontSize: '0.75rem', 
-                  color: 'var(--text-muted)', 
-                  marginTop: '0.5rem',
-                  fontFamily: 'var(--mono)'
-                }}>
-                  🔒 Only HTTPS URLs accepted. All imports are validated and will overwrite templates with the same name.
-                </p>
-              </div>
-              {status && (
-                <div className={`import-status ${status.type}`}>
-                  {status.message}
+                        <div class="accent-foot">
+                            <span>Accent: <span class="now" id="accentNow">Teal</span></span>
+                            <label class="hexin" title="Match a brand colour exactly. The lightness is still set per mode.">#<input
+                                type="text" class="field" id="accentHex" maxlength="7" placeholder="2ec4b6"
+                                spellcheck="false" autocomplete="off" aria-label="Accent colour as hex"></label>
+                        </div>
+                    </div>
                 </div>
-              )}
-              <div className="modal-actions">
-                <button type="button" onClick={onClose} disabled={loading}>
-                  Cancel
-                </button>
-                <button type="submit" className="primary" disabled={loading}>
-                  {loading ? 'Importing...' : 'Import'}
-                </button>
-              </div>
-            </form>
-          </div>
+            </div>
+
         </div>
-      );
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="statusline">~/change-manager <span class="chev">&gt;</span> <b id="stEditing">new request</b><span id="stCount"></span></div>
+
+    <!-- ============ Request ============ -->
+    <section id="pane-request" role="tabpanel" aria-labelledby="tab-request">
+
+        <div class="panel noprint">
+            <div class="row">
+                <button class="btn btn-primary" id="btnCopyAll">Copy all fields</button>
+                <button class="btn" id="btnPrint">Print</button>
+                <div class="spacer"></div>
+                <button class="btn btn-ghost btn-danger" id="btnClear">Clear form</button>
+            </div>
+            <div class="row" style="margin-top:12px">
+                <input type="text" class="field" id="saveName" placeholder="Template name" spellcheck="false"
+                       autocomplete="off" aria-label="Template name" style="flex:1 1 240px;width:auto">
+                <button class="btn" id="btnSaveTpl">Save as template</button>
+            </div>
+            <div class="note" style="margin-top:10px">Saving under an existing name overwrites it. Work is kept in this browser until you clear it.</div>
+        </div>
+
+        <div class="panel noprint" id="phPanel" hidden>
+            <div class="panel-head">
+                <h2>Placeholders</h2>
+                <span class="sub" id="phCount">0</span>
+            </div>
+            <div class="note" style="margin-bottom:12px">Anything written as <code>&lt;name&gt;</code> in the request below. Fill in a value and replace it across every field at once.</div>
+            <div class="ph-grid" id="phRows"></div>
+            <div class="row" style="margin-top:14px">
+                <button class="btn btn-primary" id="btnReplace">Replace all</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <h2>Change request</h2>
+                <span class="sub" id="fieldStat">0 of 10 filled</span>
+            </div>
+            <div class="grid" id="formTop"></div>
+            <div class="stack" id="formBody"></div>
+        </div>
+
+        <!-- Paper only: the request as a readout, because a textarea prints clipped. -->
+        <div class="printonly" id="printout"></div>
+
+    </section>
+
+    <!-- ============ Templates ============ -->
+    <section id="pane-templates" role="tabpanel" aria-labelledby="tab-templates" hidden>
+
+        <div class="panel noprint">
+            <div class="row">
+                <button class="btn" id="btnLoad">Load JSON</button>
+                <button class="btn" id="btnSave">Save JSON</button>
+                <button class="btn" id="btnCsv">Export CSV</button>
+                <div class="spacer"></div>
+                <button class="btn btn-ghost btn-danger" id="btnReset">Delete all</button>
+            </div>
+            <input type="file" id="fileIn" accept=".json,application/json" hidden>
+            <div class="note" style="margin-top:10px">Ctrl+S saves the library, Ctrl+O loads one. A file holding a bare list of templates, such as <code>central-templates.json</code>, imports as well.</div>
+        </div>
+
+        <div class="panel noprint">
+            <div class="panel-head">
+                <h2>Import a library</h2>
+                <span class="sub">file or https url</span>
+            </div>
+            <div class="drop" id="drop" tabindex="0" role="button">
+                <b>Drop a template file here</b>
+                or click to browse
+            </div>
+            <div class="row" style="margin-top:14px">
+                <input type="url" class="field" id="importUrl" placeholder="https://example.org/central-templates.json"
+                       spellcheck="false" autocomplete="off" aria-label="Template library URL"
+                       style="flex:1 1 280px;width:auto">
+                <button class="btn" id="btnImportUrl">Import from URL</button>
+            </div>
+            <div class="log" style="margin-top:10px" id="importLog">https only. Imported templates are checked against the schema and overwrite any template of the same name.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <h2>Saved templates</h2>
+                <span class="sub" id="tplCount">0</span>
+            </div>
+            <div class="row noprint" style="margin-bottom:12px">
+                <input type="text" class="field" id="filter" placeholder="Filter by name or contents"
+                       spellcheck="false" autocomplete="off" aria-label="Filter templates"
+                       style="flex:1 1 220px;width:auto">
+            </div>
+            <div id="tplList"></div>
+        </div>
+
+    </section>
+
+    <!-- ============ About ============ -->
+    <section id="pane-about" role="tabpanel" aria-labelledby="tab-about" hidden>
+        <div class="panel">
+            <div class="panel-head"><h2>About</h2></div>
+            <div class="prose">
+                <p>A builder for IT change requests. Fill in the ten fields, copy the result into
+                whatever change management system you are stuck with, and save the ones you write
+                often as templates. Placeholders written as <code>&lt;name&gt;</code> are picked up
+                automatically and can be filled in across every field at once.</p>
+                <p>Everything runs in this tab. Templates and the form in progress live in this
+                browser's local storage, so they survive a refresh and never leave the machine.
+                Clearing site data clears them, which is what Save JSON is for.</p>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-head"><h2>Importing</h2><span class="sub">the one network call</span></div>
+            <div class="prose">
+                <p>A template library is a JSON file holding a list of <code>{ name, data }</code>
+                objects. Import one by file, by drag and drop, or from an https URL you type in.
+                The URL import is the only request this tool ever makes, it is only made when you
+                ask for it, and http is refused.</p>
+                <p>Imports are checked field by field against the schema before anything is stored:
+                a template needs a name and a data object, every key has to be one of the ten known
+                fields, and every value has to be a string. Nothing imported is ever written to the
+                page as markup.</p>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-head"><h2>Appearance</h2><span class="sub">design, mode, accent</span></div>
+            <div class="prose">
+                Three controls in the top bar, saved between visits. Design sets the shape
+                language and backdrop, mode sets the lightness, and the accent can be any
+                hue. They combine freely, and the accent is re-lit per mode so it never
+                drops below a readable contrast.
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <span>change-manager</span>
+    <span class="ver" id="footVer">v2.0.0</span>
+    <span class="sep">&middot;</span>
+    <span>MIT</span>
+    <span class="sep">&middot;</span>
+    <span>github.com/shanemc92</span>
+    <span class="right">no analytics, no telemetry</span>
+</footer>
+
+<div class="notification" id="notification" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ---------- app identity ---------- */
+const APP = { id: "change-manager", version: "2.0.0", schema: 2 };
+
+/* ---------- dom helpers ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const el = (tag, cls, txt) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt != null) n.textContent = txt;
+    return n;
+};
+const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const today = () => new Date().toISOString().slice(0, 10);
+
+/* ---------- storage (file:// and private mode safe) ---------- */
+const store = {
+    get(k)   { try { return localStorage.getItem(APP.id + ":" + k); } catch (e) { return null; } },
+    set(k,v) { try { localStorage.setItem(APP.id + ":" + k, v); return true; } catch (e) { return false; } },
+    del(k)   { try { localStorage.removeItem(APP.id + ":" + k); } catch (e) {} }
+};
+
+/* ---------- notification ---------- */
+let notifyT;
+function notify(msg, isError) {
+    const n = $("#notification");
+    n.textContent = msg;
+    n.classList.toggle("error", !!isError);
+    n.classList.add("show");
+    clearTimeout(notifyT);
+    notifyT = setTimeout(() => n.classList.remove("show"), 2200);
+}
+
+/* ============================================================
+   Appearance: design x mode x accent
+
+   Each axis is one data attribute or one pair of custom properties
+   on <html>, and each is stored separately, so a design change never
+   resets the mode and neither touches the accent.
+   ============================================================ */
+const root = document.documentElement;
+
+const DESIGNS = ["chamfer", "console", "circuit", "contour"];
+const MODES   = ["dark", "dusk", "sepia", "light"];
+
+/* Hue plus chroma. Kept clear of the green, amber and red that --ok,
+   --warn and --bad occupy, so the accent can never be read as state. */
+const ACCENTS = [
+    { id: "teal",   name: "Teal",   h: 178, c: 68 },
+    { id: "cyan",   name: "Cyan",   h: 196, c: 72 },
+    { id: "azure",  name: "Azure",  h: 214, c: 76 },
+    { id: "indigo", name: "Indigo", h: 248, c: 70 },
+    { id: "violet", name: "Violet", h: 276, c: 64 },
+    { id: "orchid", name: "Orchid", h: 302, c: 58 },
+    { id: "rose",   name: "Rose",   h: 340, c: 66 },
+    { id: "slate",  name: "Slate",  h: 210, c: 18 }
+];
+
+let accent = { h: 178, c: 68, name: "Teal" };
+
+/* ---------- keeping an arbitrary hue readable ----------
+   HSL lightness is not perceptual: hsl(178 68% 40%) and
+   hsl(248 68% 40%) are nowhere near the same brightness, so a fixed
+   per-mode lightness leaves a teal accent washed out on white while
+   an indigo one is fine. The mode still sets the lightness it wants,
+   but it is treated as a starting point: the accent is then walked
+   away from the surface until it clears a real contrast ratio,
+   measured against the surfaces it actually sits on. That is what
+   makes any colour from the picker safe, including a near-white or
+   near-black one, and why no accented label can go invisible. */
+const TARGET = 4.6;
+
+const srgb = u => (u <= 0.03928 ? u / 12.92 : Math.pow((u + 0.055) / 1.055, 2.4));
+const lum = c => 0.2126 * srgb(c[0]) + 0.7152 * srgb(c[1]) + 0.0722 * srgb(c[2]);
+function ratio(a, b) {
+    const x = lum(a), y = lum(b);
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+function hslRgb(h, s, l) {
+    s /= 100; l /= 100;
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1));
+    return [f(0), f(8), f(4)];
+}
+/* Read the resolved colour off a real element rather than parsing the
+   token: the browser has already substituted every variable. */
+function surfaceOf(node) {
+    const m = /(\d+(?:\.\d+)?)[,\s]+(\d+(?:\.\d+)?)[,\s]+(\d+(?:\.\d+)?)/
+        .exec(getComputedStyle(node).backgroundColor || "");
+    return m ? [m[1] / 255, m[2] / 255, m[3] / 255] : null;
+}
+function surfaces() {
+    const out = [];
+    const p = $(".panel"), b = document.body;
+    [p, b].forEach(n => { const c = n && surfaceOf(n); if (c) out.push(c); });
+    return out.length ? out : [[0, 0, 0]];
+}
+const worst = (h, c, l, surf) => Math.min.apply(null, surf.map(s => ratio(hslRgb(h, c, l), s)));
+
+/* The mode's --al, used as the preference to start from. */
+function baseL() {
+    const v = parseFloat(getComputedStyle(root).getPropertyValue("--al"));
+    return isFinite(v) ? v : 66;
+}
+function tuneL(h, c, surf) {
+    const base = baseL();
+    if (worst(h, c, base, surf) >= TARGET) return base;
+    const dir = lum(surf[0]) > 0.35 ? -1 : 1;   /* away from the surface */
+    for (let l = base; l >= 6 && l <= 96; l += dir * 1.5) {
+        if (worst(h, c, l, surf) >= TARGET) return Math.round(l * 10) / 10;
+    }
+    return dir < 0 ? 14 : 94;
+}
+const accentCss = (h, c, l) => "hsl(" + h + " " + c + "% " + l + "%)";
+
+function applyAccent(a, save) {
+    accent = { h: a.h, c: a.c, name: a.name || ("H" + Math.round(a.h)) };
+    root.style.setProperty("--ah", String(accent.h));
+    root.style.setProperty("--ac", accent.c + "%");
+    $("#accentNow").textContent = accent.name;
+    tuneAccent();
+    if (save && !store.set("accent", JSON.stringify(accent))) sessionOnly();
+}
+
+/* Sets the accent lightness, and the ink that goes on top of it, from
+   measurement rather than assumption. Called on accent change and on
+   every mode change, since the surface underneath has just moved. */
+function tuneAccent() {
+    const surf = surfaces();
+    /* --al is cleared first so baseL() reads the mode's value, not the
+       one tuned for the previous mode. */
+    root.style.removeProperty("--al");
+    const l = tuneL(accent.h, accent.c, surf);
+    root.style.setProperty("--al", l + "%");
+
+    const acc = hslRgb(accent.h, accent.c, l);
+    const pale = hslRgb(accent.h, 30, 98), deep = hslRgb(accent.h, 55, 9);
+    root.style.setProperty("--ink",
+        ratio(pale, acc) >= ratio(deep, acc) ? accentCss(accent.h, 30, 98) : accentCss(accent.h, 55, 9));
+
+    paintSwatches(surf);
+    paintWheel(surf);
+}
+
+/* The rim is 24 stops of the same tuned colour the page would use, so
+   the wheel shifts with the mode instead of lying about it. Hue 0 sits
+   at three o'clock and runs clockwise, which is what the pointer maths
+   below assumes. */
+const WHEEL_C = 80;
+function paintWheel(surf) {
+    const s0 = surf || surfaces();
+    const w = $("#wheel");
+    const tuned = root.style.getPropertyValue("--al");
+    root.style.removeProperty("--al");
+    const stops = [];
+    for (let h = 0; h <= 360; h += 15) {
+        stops.push(accentCss(h % 360, WHEEL_C, tuneL(h % 360, WHEEL_C, s0)) + " " + h + "deg");
+    }
+    if (tuned) root.style.setProperty("--al", tuned);
+    w.style.background = "conic-gradient(from 90deg, " + stops.join(", ") + ")";
+
+    const r = (w.clientWidth || 116) / 2;   /* menu is display:none on the first paint */
+    const rad = accent.h * Math.PI / 180;
+    const d = Math.min(1, Math.max(0, (accent.c - C_MIN) / (C_MAX - C_MIN))) * (r - 7);
+    const dot = $("#wheelDot");
+    dot.style.left = (r + Math.cos(rad) * d) + "px";
+    dot.style.top  = (r + Math.sin(rad) * d) + "px";
+    dot.style.background = "var(--accent)";
+    w.setAttribute("aria-valuenow", String(Math.round(accent.h)));
+    w.setAttribute("aria-valuetext", accent.name);
+}
+
+function paintSwatches(surf) {
+    const s0 = surf || surfaces();
+    const tuned = root.style.getPropertyValue("--al");
+    root.style.removeProperty("--al");
+    $$(".swatch").forEach(sw => {
+        const h = Number(sw.dataset.h), c = Number(sw.dataset.c);
+        sw.style.background = accentCss(h, c, tuneL(h, c, s0));
+        sw.setAttribute("aria-checked", String(h === accent.h && c === accent.c));
+    });
+    if (tuned) root.style.setProperty("--al", tuned);
+}
+
+/* The chroma range the picker works in. The floor keeps a grey pick
+   reading as a deliberate accent rather than as broken chrome. */
+const C_MIN = 12, C_MAX = 92;
+
+/* hex -> hue and chroma. Lightness is dropped on purpose: the mode
+   supplies it, which is what stops a near-black custom pick from
+   turning every accented label invisible. */
+function hexToHc(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+    if (!m) return null;
+    const n = parseInt(m[1], 16);
+    const r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    let h = 0;
+    if (d) {
+        if (max === r)      h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else                h = (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    const li = (max + min) / 2;
+    const s = d ? d / (1 - Math.abs(2 * li - 1)) : 0;
+    /* Floor the chroma so a grey pick still reads as a deliberate accent. */
+    return { h: Math.round(h), c: Math.max(C_MIN, Math.min(C_MAX, Math.round(s * 100))) };
+}
+
+function applyDesign(d, save) {
+    const v = DESIGNS.includes(d) ? d : DESIGNS[0];
+    root.dataset.design = v;
+    $$("#designMenu .opt").forEach(o => o.setAttribute("aria-checked", String(o.dataset.set === v)));
+    if (save && !store.set("design", v)) sessionOnly();
+}
+
+function applyMode(m, save) {
+    const v = MODES.includes(m) ? m : MODES[0];
+    root.dataset.mode = v;
+    $$("#modeMenu .opt").forEach(o => o.setAttribute("aria-checked", String(o.dataset.set === v)));
+    tuneAccent();      /* the accent is re-lit for the new surface */
+    if (save && !store.set("mode", v)) sessionOnly();
+}
+
+let warned = false;
+function sessionOnly() {
+    if (warned) return;
+    warned = true;
+    notify("Appearance changed for this session only, saving it needs the page served over http");
+}
+
+/* ---------- menus ---------- */
+const MENUS = [["#designBtn", "#designMenu"], ["#modeBtn", "#modeMenu"], ["#accentBtn", "#accentMenu"]];
+
+function closeMenus(except) {
+    MENUS.forEach(([b, m]) => {
+        if (m === except) return;
+        $(m).hidden = true;
+        $(b).setAttribute("aria-expanded", "false");
+    });
+}
+MENUS.forEach(([b, m]) => {
+    $(b).addEventListener("click", e => {
+        e.stopPropagation();
+        const open = $(m).hidden;
+        closeMenus(open ? m : null);
+        $(m).hidden = !open;
+        $(b).setAttribute("aria-expanded", String(open));
+        if (open && m === "#accentMenu") paintWheel();
+    });
+});
+document.addEventListener("click", e => {
+    if (!MENUS.some(([b, m]) => $(m).contains(e.target) || $(b).contains(e.target))) closeMenus();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenus(); });
+
+$$("#designMenu .opt").forEach(o => o.addEventListener("click", () => {
+    applyDesign(o.dataset.set, true);
+    closeMenus();
+}));
+$$("#modeMenu .opt").forEach(o => o.addEventListener("click", () => {
+    applyMode(o.dataset.set, true);
+    closeMenus();
+}));
+
+/* Swatches are built rather than written out: one source of truth for
+   the hues, and each button gets a real label for screen readers. */
+ACCENTS.forEach(a => {
+    const b = el("button", "swatch");
+    b.type = "button";
+    b.setAttribute("role", "menuitemradio");
+    b.setAttribute("aria-checked", "false");
+    b.setAttribute("aria-label", a.name);
+    b.title = a.name;
+    b.dataset.h = a.h;
+    b.dataset.c = a.c;
+    b.addEventListener("click", () => applyAccent(a, true));
+    $("#swatches").appendChild(b);
+});
+/* Wheel: angle is hue, distance from the middle is chroma. Pointer
+   capture means a drag that leaves the circle still tracks, and the
+   same handler covers mouse, pen and touch. */
+const wheel = $("#wheel");
+function pickFrom(e) {
+    const b = wheel.getBoundingClientRect();
+    const r = b.width / 2;
+    const x = e.clientX - b.left - r, y = e.clientY - b.top - r;
+    let h = Math.atan2(y, x) * 180 / Math.PI;
+    if (h < 0) h += 360;
+    const c = C_MIN + Math.min(1, Math.hypot(x, y) / (r - 7)) * (C_MAX - C_MIN);
+    applyAccent({ h: Math.round(h), c: Math.round(c), name: hcName(h, c) }, true);
+}
+const hcName = (h, c) => "H" + Math.round(h) + " C" + Math.round(c);
+
+wheel.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    wheel.setPointerCapture(e.pointerId);
+    pickFrom(e);
+});
+wheel.addEventListener("pointermove", e => {
+    if (wheel.hasPointerCapture(e.pointerId)) pickFrom(e);
+});
+wheel.addEventListener("keydown", e => {
+    const step = { ArrowLeft: [-4, 0], ArrowRight: [4, 0], ArrowUp: [0, 5], ArrowDown: [0, -5] }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const h = (accent.h + step[0] + 360) % 360;
+    const c = Math.max(C_MIN, Math.min(C_MAX, accent.c + step[1]));
+    applyAccent({ h: h, c: c, name: hcName(h, c) }, true);
+});
+
+/* Hex entry, for matching something exact. */
+$("#accentHex").addEventListener("input", e => {
+    const hc = hexToHc(e.target.value);
+    if (hc) applyAccent({ h: hc.h, c: hc.c, name: "#" + e.target.value.trim().replace(/^#/, "").toUpperCase() }, true);
+});
+
+/* ---------- restore appearance ---------- */
+applyDesign(store.get("design") || DESIGNS[0], false);
+applyMode(store.get("mode") || MODES[0], false);
+(() => {
+    let a = null;
+    try { a = JSON.parse(store.get("accent")); } catch (e) {}
+    applyAccent(a && isFinite(a.h) ? a : ACCENTS[0], false);
+})();
+
+/* ---------- tabs ---------- */
+const TABS = [["request", "pane-request"], ["templates", "pane-templates"], ["about", "pane-about"]];
+function tab(which) {
+    TABS.forEach(([id, pane]) => {
+        $("#tab-" + id).setAttribute("aria-selected", String(id === which));
+        $("#" + pane).hidden = id !== which;
+    });
+}
+TABS.forEach(([id]) => $("#tab-" + id).addEventListener("click", () => tab(id)));
+
+/* ---------- files ---------- */
+function download(name, text, type) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type: type || "text/plain;charset=utf-8" }));
+    a.download = name;
+    a.click();
+    setTimeout(() => { try { URL.revokeObjectURL(a.href); } catch (e) {} }, 1000);
+}
+function read(file, cb) {
+    const r = new FileReader();
+    r.onload = () => cb(String(r.result), file);
+    r.onerror = () => notify("Could not read that file", true);
+    r.readAsText(file);
+}
+function dropzone(zone, input, cb) {
+    zone.addEventListener("click", () => input.click());
+    zone.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); }
+    });
+    input.addEventListener("change", () => {
+        if (input.files[0]) read(input.files[0], cb);
+        input.value = "";
+    });
+    zone.addEventListener("dragover", e => { e.preventDefault(); zone.classList.add("over"); });
+    zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+    zone.addEventListener("drop", e => {
+        e.preventDefault();
+        zone.classList.remove("over");
+        const f = e.dataTransfer.files[0];
+        if (f) read(f, cb);
+    });
+}
+const fname = ext => APP.id + "-" + today() + "." + ext;
+
+/* ---------- csv ---------- */
+const csvCell = v => {
+    const s = v == null ? "" : String(v);
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+};
+const toCsv = rows => rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+
+/* ============================================================
+   The request itself
+
+   One list of fields, used for the form, the schema check, the
+   clipboard output, the CSV and the printed readout. Adding a
+   field means adding one entry here and nothing else.
+   ============================================================ */
+const FIELDS = [
+    {
+        id: "typeOfChange", label: "Type of change", type: "select",
+        options: ["Normal", "Standard", "Emergency"]
+    },
+    { id: "duration", label: "Duration (minutes)", type: "number", ph: "60" },
+    { id: "downtime", label: "Downtime (minutes)", type: "number", ph: "30" },
+    {
+        id: "reason", label: "Reason for change", type: "area", rows: 5,
+        ph: "Why is the change required?\nBusiness, operational or technical driver.\nWhat problem is solved or improvement delivered?"
+    },
+    {
+        id: "steps", label: "Steps involved", type: "area", rows: 8,
+        ph: "Clear, ordered implementation steps.\nTools, systems and teams involved.\nEnough detail for another engineer to execute it."
+    },
+    {
+        id: "testPlan", label: "Test plan", type: "area", rows: 6,
+        ph: "Pre-change checks to establish a baseline.\nPre-change testing performed.\nPost-change validation to confirm success.\nFunctional and service availability checks."
+    },
+    {
+        id: "risks", label: "Risks", type: "area", rows: 5,
+        ph: "Impact to users, business operations, infrastructure.\nMitigations considered.\nLikelihood and severity in plain language."
+    },
+    {
+        id: "securityRisks", label: "Security risks", type: "area", rows: 5,
+        ph: "Risk to confidentiality, integrity or availability.\nAccess, privilege, exposure or compliance considerations.\nState explicitly if the risk is low or none."
+    },
+    {
+        id: "backupPlan", label: "Backup and contingency", type: "area", rows: 5,
+        ph: "Rollback steps if the change fails.\nIs there a confirmed backup or restore point?\nWho is responsible, and how quick is recovery?"
+    },
+    {
+        id: "expectedResults", label: "Expected results", type: "area", rows: 5,
+        ph: "What success looks like once complete.\nMeasurable or observable outcomes.\nServices, performance or risk posture after the change."
+    }
+];
+const KEYS = FIELDS.map(f => f.id);
+const LABELS = {};
+FIELDS.forEach(f => { LABELS[f.id] = f.label; });
+
+/* ---------- state ---------- */
+function blankForm() {
+    const o = {};
+    KEYS.forEach(k => { o[k] = ""; });
+    return o;
+}
+function blankState() {
+    return {
+        schema: APP.schema,
+        app: APP.id,
+        form: blankForm(),
+        current: "",          /* name of the template the form came from */
+        placeholders: {},     /* <name> -> replacement, kept between visits */
+        templates: []         /* [{ name, data }] */
+    };
+}
+let state = blankState();
+
+function persist() { store.set("state", JSON.stringify(state)); }
+function restore() {
+    const raw = store.get("state");
+    if (!raw) return false;
+    try {
+        const d = JSON.parse(raw);
+        if (d && d.app === APP.id) { state = adopt(d); return true; }
+    } catch (e) {}
+    return false;
+}
+/* Merge a parsed object onto a blank state, keeping only what this
+   version understands. Anything missing falls back rather than
+   leaving the form holding undefined. */
+function adopt(d) {
+    const s = blankState();
+    if (d.form && typeof d.form === "object") {
+        KEYS.forEach(k => { if (typeof d.form[k] === "string") s.form[k] = d.form[k]; });
+    }
+    if (typeof d.current === "string") s.current = d.current;
+    if (d.placeholders && typeof d.placeholders === "object") {
+        Object.keys(d.placeholders).forEach(k => {
+            if (typeof d.placeholders[k] === "string") s.placeholders[k] = d.placeholders[k];
+        });
+    }
+    if (Array.isArray(d.templates)) {
+        try { s.templates = checkLibrary(d.templates); } catch (e) { s.templates = []; }
+    }
+    return s;
+}
+
+/* ---------- schema check for anything imported ----------
+   A template is { name, data } where every key of data is one of
+   the ten known fields and every value is a string. Imports come
+   from files and from a URL, so this runs before anything reaches
+   state, and nothing imported is ever written to the page as
+   markup: the renderers below build nodes and set textContent. */
+function checkLibrary(input) {
+    const list = Array.isArray(input) ? input : [input];
+    if (!list.length) throw new Error("no templates in that file");
+    return list.map((t, i) => {
+        const at = "template " + (i + 1);
+        if (!t || typeof t !== "object") throw new Error(at + " is not an object");
+        if (typeof t.name !== "string" || !t.name.trim()) throw new Error(at + " has no name");
+        if (!t.data || typeof t.data !== "object") throw new Error('"' + t.name + '" has no data');
+        const data = blankForm();
+        Object.keys(t.data).forEach(k => {
+            if (KEYS.indexOf(k) === -1) throw new Error('"' + t.name + '" has an unknown field "' + k + '"');
+            if (typeof t.data[k] !== "string") throw new Error('"' + t.name + '" field "' + k + '" is not text');
+            data[k] = t.data[k];
+        });
+        return { name: t.name.trim().slice(0, 120), data: data };
+    });
+}
+
+/* Upsert by name, so re-importing a library updates in place rather
+   than growing a second copy of every template. */
+function merge(list) {
+    let added = 0, updated = 0;
+    list.forEach(t => {
+        const i = state.templates.findIndex(x => x.name === t.name);
+        if (i === -1) { state.templates.push(t); added++; }
+        else { state.templates[i] = t; updated++; }
+    });
+    persist();
+    renderTemplates();
+    return { added: added, updated: updated };
+}
+
+/* ============================================================
+   Form
+   ============================================================ */
+function buildForm() {
+    const top = $("#formTop"), body = $("#formBody");
+    top.textContent = "";
+    body.textContent = "";
+
+    FIELDS.forEach(f => {
+        const wrap = el("div", "fld");
+        const head = el("div", "fld-head");
+        const lab = el("label", null, f.label);
+        lab.htmlFor = "f-" + f.id;
+        head.appendChild(lab);
+
+        const copy = el("button", "btn btn-sm btn-ghost noprint", "Copy");
+        copy.type = "button";
+        copy.title = "Copy " + f.label.toLowerCase();
+        copy.setAttribute("aria-label", "Copy " + f.label.toLowerCase());
+        copy.addEventListener("click", () => copyText(state.form[f.id], f.label));
+        head.appendChild(copy);
+        wrap.appendChild(head);
+
+        let input;
+        if (f.type === "select") {
+            input = el("select", "field");
+            const none = el("option", null, "Select...");
+            none.value = "";
+            input.appendChild(none);
+            f.options.forEach(o => {
+                const opt = el("option", null, o);
+                opt.value = o;
+                input.appendChild(opt);
+            });
+        } else if (f.type === "area") {
+            input = el("textarea", "field");
+            input.rows = f.rows || 5;
+            input.placeholder = f.ph || "";
+            input.spellcheck = true;
+        } else {
+            input = el("input", "field");
+            input.type = "number";
+            input.min = "0";
+            input.placeholder = f.ph || "";
+        }
+        input.id = "f-" + f.id;
+        input.addEventListener("input", () => {
+            state.form[f.id] = input.value;
+            persist();
+            afterEdit();
+        });
+        if (f.type === "select") input.addEventListener("change", () => {
+            state.form[f.id] = input.value;
+            persist();
+            afterEdit();
+        });
+        wrap.appendChild(input);
+
+        (f.type === "area" ? body : top).appendChild(wrap);
+    });
+}
+
+function fillForm() {
+    FIELDS.forEach(f => { $("#f-" + f.id).value = state.form[f.id] || ""; });
+}
+
+/* Everything that follows a keystroke but not a full redraw. */
+function afterEdit() {
+    renderPlaceholders();
+    renderStatus();
+    renderPrintout();
+}
+
+const filled = data => KEYS.filter(k => (data[k] || "").trim()).length;
+
+function renderStatus() {
+    $("#fieldStat").textContent = filled(state.form) + " of " + KEYS.length + " filled";
+    $("#stEditing").textContent = state.current ? state.current : "new request";
+    const n = state.templates.length;
+    $("#stCount").textContent = ", " + n + (n === 1 ? " template saved" : " templates saved");
+}
+
+/* ---------- clipboard ---------- */
+function copyText(text, label) {
+    if (!text || !text.trim()) { notify("Nothing in " + label.toLowerCase() + " to copy", true); return; }
+    const done = () => notify(label + " copied");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    } else {
+        fallbackCopy(text, done);
+    }
+}
+/* file:// and older browsers have no async clipboard. */
+function fallbackCopy(text, done) {
+    const ta = el("textarea");
+    ta.value = text;
+    ta.setAttribute("aria-hidden", "true");
+    ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    ta.remove();
+    ok ? done() : notify("Could not reach the clipboard", true);
+}
+function asText(data) {
+    return FIELDS
+        .filter(f => (data[f.id] || "").trim())
+        .map(f => "**" + f.label + "**\n" + data[f.id].trim())
+        .join("\n\n");
+}
+
+/* ============================================================
+   Placeholders: <thing> anywhere in the request
+   ============================================================ */
+const PH = /<([^<>\n]{1,60})>/g;
+const rxEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+function foundPlaceholders() {
+    const seen = [];
+    KEYS.forEach(k => {
+        const v = state.form[k] || "";
+        let m;
+        PH.lastIndex = 0;
+        while ((m = PH.exec(v)) !== null) {
+            const name = m[1].trim();
+            if (name && seen.indexOf(name) === -1) seen.push(name);
+        }
+    });
+    return seen;
+}
+
+function renderPlaceholders() {
+    const names = foundPlaceholders();
+    const host = $("#phRows");
+    $("#phPanel").hidden = names.length === 0;
+    $("#phCount").textContent = String(names.length);
+    host.textContent = "";
+
+    names.forEach(name => {
+        const row = el("div", "ph-row");
+        row.appendChild(el("code", "ph-name", "<" + name + ">"));
+        const inp = el("input", "field");
+        inp.type = "text";
+        inp.value = state.placeholders[name] || "";
+        inp.placeholder = "Replacement value";
+        inp.setAttribute("aria-label", "Value for " + name);
+        inp.addEventListener("input", () => { state.placeholders[name] = inp.value; persist(); });
+        inp.addEventListener("keydown", e => { if (e.key === "Enter") replaceAll(); });
+        row.appendChild(inp);
+        host.appendChild(row);
+    });
+}
+
+function replaceAll() {
+    const names = foundPlaceholders().filter(n => (state.placeholders[n] || "").trim());
+    if (!names.length) { notify("No replacement values filled in", true); return; }
+    let hits = 0;
+    names.forEach(name => {
+        const rx = new RegExp("<" + rxEsc(name) + ">", "g");
+        const to = state.placeholders[name];
+        KEYS.forEach(k => {
+            const before = state.form[k] || "";
+            const after = before.replace(rx, to);
+            if (after !== before) hits += before.split(rx).length - 1;
+            state.form[k] = after;
+        });
+        delete state.placeholders[name];
+    });
+    persist();
+    fillForm();
+    afterEdit();
+    notify(hits + (hits === 1 ? " placeholder replaced" : " placeholders replaced"));
+}
+
+/* ============================================================
+   Templates
+   ============================================================ */
+function saveTemplate() {
+    const name = $("#saveName").value.trim();
+    if (!name) { notify("Give the template a name first", true); return; }
+    if (!filled(state.form)) { notify("The form is empty", true); return; }
+    const i = state.templates.findIndex(t => t.name === name);
+    if (i !== -1 && !confirm('A template called "' + name + '" already exists. Overwrite it?')) return;
+    const t = { name: name, data: Object.assign({}, state.form) };
+    if (i === -1) state.templates.push(t); else state.templates[i] = t;
+    state.current = name;
+    persist();
+    renderTemplates();
+    renderStatus();
+    notify(i === -1 ? "Saved as " + name : name + " updated");
+}
+
+function loadTemplate(t) {
+    if (filled(state.form) && !confirm('Replace the current request with "' + t.name + '"?')) return;
+    state.form = Object.assign(blankForm(), t.data);
+    state.current = t.name;
+    persist();
+    $("#saveName").value = t.name;
+    fillForm();
+    afterEdit();
+    renderStatus();
+    tab("request");
+    window.scrollTo(0, 0);
+    notify(t.name + " loaded");
+}
+
+function deleteTemplate(t) {
+    if (!confirm('Delete the template "' + t.name + '"?')) return;
+    state.templates = state.templates.filter(x => x.name !== t.name);
+    if (state.current === t.name) state.current = "";
+    persist();
+    renderTemplates();
+    renderStatus();
+    notify(t.name + " deleted");
+}
+
+function renderTemplates() {
+    const host = $("#tplList");
+    const q = $("#filter").value.trim().toLowerCase();
+    host.textContent = "";
+    $("#tplCount").textContent = String(state.templates.length);
+
+    const shown = state.templates.filter(t =>
+        !q || t.name.toLowerCase().indexOf(q) !== -1 ||
+        KEYS.some(k => (t.data[k] || "").toLowerCase().indexOf(q) !== -1));
+
+    if (!shown.length) {
+        host.appendChild(el("div", "empty", state.templates.length
+            ? "Nothing matches that filter."
+            : "No templates yet. Fill in a request and save it, or import a library above."));
+        renderStatus();
+        return;
     }
 
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
+    const t = el("table");
+    const head = el("tr");
+    ["Name", "Summary", ""].forEach(h => head.appendChild(el("th", null, h)));
+    t.appendChild(head);
+
+    shown.forEach(tpl => {
+        const tr = el("tr");
+        if (tpl.name === state.current) tr.className = "is-current";
+
+        const tdN = el("td");
+        tdN.appendChild(el("span", "tpl-name", tpl.name));
+        tr.appendChild(tdN);
+
+        tr.appendChild(el("td", "tpl-sum",
+            (tpl.data.typeOfChange || "unset") + ", " + filled(tpl.data) + "/" + KEYS.length + " fields"));
+
+        const tdA = el("td", "noprint");
+        const row = el("div", "row tpl-actions");
+        [
+            ["Load", "btn btn-sm", () => loadTemplate(tpl)],
+            ["Copy", "btn btn-sm", () => copyText(asText(tpl.data), tpl.name)],
+            ["Export", "btn btn-sm", () => {
+                download(slug(tpl.name) + ".json", JSON.stringify([tpl], null, 2), "application/json");
+                notify(tpl.name + " exported");
+            }],
+            ["Delete", "btn btn-sm btn-ghost btn-danger", () => deleteTemplate(tpl)]
+        ].forEach(([label, cls, fn]) => {
+            const b = el("button", cls, label);
+            b.type = "button";
+            b.title = label + " " + tpl.name;
+            b.addEventListener("click", fn);
+            row.appendChild(b);
+        });
+        tdA.appendChild(row);
+        tr.appendChild(tdA);
+
+        t.appendChild(tr);
+    });
+
+    host.appendChild(t);
+    renderStatus();
+}
+
+const slug = s => (s || APP.id).replace(/[^a-z0-9]+/gi, "-").toLowerCase().replace(/^-|-$/g, "") || APP.id;
+
+/* ---------- library in and out ---------- */
+function saveJson() {
+    const out = {
+        schema: APP.schema,
+        app: APP.id,
+        version: APP.version,
+        exported: new Date().toISOString(),
+        current: state.current,
+        form: state.form,
+        placeholders: state.placeholders,
+        templates: state.templates
+    };
+    download(fname("json"), JSON.stringify(out, null, 2), "application/json");
+    notify("Saved");
+}
+
+function loadJson(text) {
+    let d;
+    try { d = JSON.parse(text); }
+    catch (e) { notify("That file is not valid JSON", true); return; }
+
+    /* A bare list is a template library, the shape central-templates.json
+       has. An object is a full save from this tool. */
+    if (Array.isArray(d)) {
+        let list;
+        try { list = checkLibrary(d); }
+        catch (e) { notify("Import rejected: " + e.message, true); return; }
+        const r = merge(list);
+        notify(r.added + " added, " + r.updated + " updated");
+        tab("templates");
+        return;
+    }
+    if (!d || typeof d !== "object") { notify("That file is not a saved " + APP.id + " file", true); return; }
+    if (d.app && d.app !== APP.id &&
+        !confirm('That file was saved by "' + d.app + '", not ' + APP.id + ". Load it anyway?")) return;
+    if (d.schema > APP.schema &&
+        !confirm("That file was saved by a newer version of this tool. Some fields may be dropped. Continue?")) return;
+    if (Array.isArray(d.templates)) {
+        try { checkLibrary(d.templates); }
+        catch (e) { notify("Import rejected: " + e.message, true); return; }
+    }
+    state = adopt(d);
+    persist();
+    render();
+    notify("Loaded");
+}
+
+/* The one request this tool makes, and only when asked. */
+function importFromUrl() {
+    const raw = $("#importUrl").value.trim();
+    const log = $("#importLog");
+    const say = (msg, cls) => { log.textContent = ""; log.appendChild(el("span", cls || null, msg)); };
+
+    if (!raw) { say("Paste a library URL first.", "warn"); return; }
+    let url;
+    try { url = new URL(raw); }
+    catch (e) { say("That is not a URL.", "bad"); return; }
+    if (url.protocol !== "https:") { say("https only. " + url.protocol + "// is refused.", "bad"); return; }
+
+    const btn = $("#btnImportUrl");
+    btn.disabled = true;
+    say("Fetching " + url.host + "...", "a");
+
+    fetch(url.href, { credentials: "omit", cache: "no-store", referrerPolicy: "no-referrer" })
+        .then(res => {
+            if (!res.ok) throw new Error("the server answered " + res.status);
+            return res.text();
+        })
+        .then(text => {
+            let parsed;
+            try { parsed = JSON.parse(text); }
+            catch (e) { throw new Error("that is not JSON"); }
+            const list = checkLibrary(Array.isArray(parsed) ? parsed : (parsed.templates || parsed));
+            const r = merge(list);
+            say(list.length + " read from " + url.host + ", " + r.added + " added, " + r.updated + " updated.", "ok");
+            notify("Imported " + list.length + " from " + url.host);
+        })
+        .catch(e => {
+            say("Import failed: " + e.message + ".", "bad");
+            notify("Import failed", true);
+        })
+        .then(() => { btn.disabled = false; });
+}
+
+function exportCsv() {
+    if (!state.templates.length) { notify("No templates to export", true); return; }
+    const rows = [["name"].concat(KEYS.map(k => LABELS[k]))]
+        .concat(state.templates.map(t => [t.name].concat(KEYS.map(k => t.data[k] || ""))));
+    download(fname("csv"), toCsv(rows), "text/csv;charset=utf-8");
+    notify("CSV exported");
+}
+
+function clearForm() {
+    if (filled(state.form) && !confirm("Clear the form? Saved templates are kept.")) return;
+    state.form = blankForm();
+    state.current = "";
+    state.placeholders = {};
+    persist();
+    $("#saveName").value = "";
+    fillForm();
+    afterEdit();
+    renderStatus();
+    notify("Form cleared");
+}
+
+function deleteAll() {
+    if (!state.templates.length) { notify("There are no templates", true); return; }
+    if (!confirm("Delete all " + state.templates.length + " templates? The form is kept.")) return;
+    state.templates = [];
+    state.current = "";
+    persist();
+    renderTemplates();
+    notify("Templates deleted");
+}
+
+/* ============================================================
+   Print: a textarea prints clipped, so paper gets a readout
+   built from the same fields.
+   ============================================================ */
+function renderPrintout() {
+    const host = $("#printout");
+    host.textContent = "";
+    const h = el("h2", "pr-title", state.current || "Change request");
+    host.appendChild(h);
+
+    const used = FIELDS.filter(f => (state.form[f.id] || "").trim());
+    if (!used.length) {
+        host.appendChild(el("div", "pr-empty", "Nothing filled in."));
+        return;
+    }
+    used.forEach(f => {
+        const sec = el("div", "pr-sec");
+        sec.appendChild(el("h3", "pr-h", f.label));
+        sec.appendChild(el("pre", "pr-body", state.form[f.id].trim()));
+        host.appendChild(sec);
+    });
+}
+
+/* ============================================================
+   Wiring
+   ============================================================ */
+$("#btnCopyAll").addEventListener("click", () => {
+    const text = asText(state.form);
+    if (!text) { notify("Nothing to copy", true); return; }
+    copyText(text, "All fields");
+});
+$("#btnPrint").addEventListener("click", () => window.print());
+$("#btnClear").addEventListener("click", clearForm);
+$("#btnSaveTpl").addEventListener("click", saveTemplate);
+$("#saveName").addEventListener("keydown", e => { if (e.key === "Enter") saveTemplate(); });
+$("#btnReplace").addEventListener("click", replaceAll);
+
+$("#btnSave").addEventListener("click", saveJson);
+$("#btnLoad").addEventListener("click", () => $("#fileIn").click());
+$("#fileIn").addEventListener("change", e => {
+    if (e.target.files[0]) read(e.target.files[0], loadJson);
+    e.target.value = "";
+});
+$("#btnCsv").addEventListener("click", exportCsv);
+$("#btnReset").addEventListener("click", deleteAll);
+$("#btnImportUrl").addEventListener("click", importFromUrl);
+$("#importUrl").addEventListener("keydown", e => { if (e.key === "Enter") importFromUrl(); });
+$("#filter").addEventListener("input", renderTemplates);
+
+dropzone($("#drop"), (() => {
+    const f = el("input");
+    f.type = "file";
+    f.accept = ".json,application/json";
+    f.hidden = true;
+    document.body.appendChild(f);
+    return f;
+})(), loadJson);
+
+document.addEventListener("keydown", e => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    const k = e.key.toLowerCase();
+    if (k === "s") { e.preventDefault(); saveJson(); }
+    if (k === "o") { e.preventDefault(); $("#fileIn").click(); }
+});
+
+/* ---------- version, in the footer only ---------- */
+$("#footVer").textContent = "v" + APP.version;
+
+/* ---------- go ---------- */
+function render() {
+    fillForm();
+    $("#saveName").value = state.current || "";
+    renderTemplates();
+    afterEdit();
+}
+buildForm();
+restore();
+render();
+</script>
 </body>
 </html>
