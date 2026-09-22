@@ -85,6 +85,16 @@ one in and press the button.
   `default-src 'none'` with `connect-src https:` so the URL import works and
   nothing else can phone home. Plain http imports are refused before the request
   is made.
+- `connect-src https:` stays broad on purpose and is not narrowed to a list of
+  origins. The only thing that fetches is **Import library from URL**, where the
+  URL is whatever you paste in - the whole point is that it can be any host, so
+  there is no fixed set of origins to name. The fetch is sent with
+  `credentials: "omit"`, `cache: "no-store"` and `referrerPolicy: "no-referrer"`,
+  the response is parsed as JSON and never executed, and every imported template
+  is validated field by field before it is stored.
+- `frame-ancestors` is set in `_headers` and `.htaccess` only. Browsers ignore
+  it in a meta tag and log a warning, so it is deliberately absent from the
+  document's CSP.
 - Imports are checked field by field before anything is stored: a template needs
   a name and a data object, every key has to be one of the ten known fields, and
   every value has to be a string.
