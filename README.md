@@ -30,7 +30,7 @@ progress and the appearance you picked. Save JSON is the backup.
 ## Appearance
 
 Three independent controls in the top bar, saved between visits: design
-(chamfer, console, circuit, contour), mode (dark, dusk, sepia, light) and accent
+(cobalt, chamfer, console, contour), mode (dark, dusk, sepia, light) and accent
 (eight presets, a colour wheel, or a hex value). Sixteen palettes plus a free
 accent, and the accent is re-lit against the live surface so it never drops below
 a readable contrast.
